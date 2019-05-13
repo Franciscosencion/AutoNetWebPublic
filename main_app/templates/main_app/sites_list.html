@@ -1,0 +1,28 @@
+{% extends 'main_app/main_app_base.html' %}
+
+
+{%block content %}
+
+
+
+  <div class="container">
+
+  <h1><strong>Sites:</strong></h1>
+  {% for site in sites %}
+    <table class="table">
+      <thead class="thead-dark">
+        <th>#</th>
+        <th>Site Name</th>
+        <th>Location</th>
+      </thead>
+      <tr>
+          <td>{{site.id}}</td>
+          <td><h4><a href="sites/{{ site.id }}">{{site.site_name}}</a></h4></td>
+          <td><h4>{{site.site_location}}</h4></td>
+      </tr>
+    </table>
+
+    {%endfor%}
+  </div>
+
+{%endblock content %}

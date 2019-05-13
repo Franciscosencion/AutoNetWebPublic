@@ -1,0 +1,45 @@
+{% extends 'main_app/main_app_base.html' %}
+
+
+{%block content %}
+<div class="container">
+  <h2>Site Details:</h2>
+  <br>
+  <table class="table">
+    <thead  class="thead-dark">
+      <th>Site Name</th>
+      <th>Location</th>
+      <th>Point of Contact</th>
+      <th>Contact Number</th>
+    </thead>
+    <tr>
+      <td>{{sites_detail.site_name}}</td>
+      <td>{{sites_detail.site_location}}</td>
+      <td>{{sites_detail.site_poc_name}}</td>
+      <td>{{sites_detail.site_poc_number}}</td>
+    </tr>
+  </table>
+  <br>
+</div>
+<div class="container">
+  <h2>Devices:</h2>
+  <br>
+  <table class="table">
+    <thead  class="thead-dark">
+      <th>Device Name</th>
+      <th>Device IP</th>
+      <th>Model</th>
+      <th>Serial Number</th>
+    </thead>
+    {% for device in sites_detail.devices.all %}
+      <tr>
+        <td>{{device.device_name}}</td>
+        <td>{{device.device_ip}}</td>
+        <td>{{device.device_model}}</td>
+        <td>{{device.device_sn}}</td>
+      </tr>
+    {% endfor %}
+
+  </table>
+</div>
+{%endblock content %}
