@@ -8,7 +8,6 @@ urlpatterns = [
     path('sites', views.SitesListView.as_view(), name='viewsites'),
     path('sites/<int:pk>', views.SitesDetailView.as_view(), name='sitesdetail'),
     path('updatesite/<int:pk>', views.SiteUpdateView.as_view(), name='updatesite'),
-    path('deletesite/<int:pk>', views.SiteDeleteView.as_view(), name='deletesite'),
     path('devices', views.DeviceListView.as_view(), name='viewdevices'),
     path('create/', views.SiteCreateView.as_view(), name='createsite'),
     path('create_device/', views.DeviceCreateView.as_view(), name='createdevice'),

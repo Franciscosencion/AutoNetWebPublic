@@ -1,0 +1,16 @@
+{% extends 'main_app/main_app_base.html' %}
+{% load crispy_forms_tags %}
+
+{%block content %}
+<div class="container">
+  <form method="post">
+    {% csrf_token %}
+    <br>
+    <p>Are you sure you want to delete {{site.site_name}}?</p>
+    <input class="btn btn-danger" type="submit" value="Delete">
+    <a href="{% url 'main_app:sitesdetail' pk=site.id%}"><input class="btn btn-primary" type="button" value="Cancel"></a>
+
+  </form>
+</div>
+
+{%endblock content %}

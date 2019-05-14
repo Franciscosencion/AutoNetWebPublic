@@ -1,0 +1,26 @@
+{% extends 'main_app/main_app_base.html' %}
+
+
+{%block content %}
+<div class="container">
+  <h2>Device Details:</h2>
+  <br>
+  <table class="table table-bordered">
+    <thead  class="thead-dark">
+      <th>Device Name</th>
+      <th>IP</th>
+      <th>Model</th>
+      <th>Serial Number</th>
+      <th>Site</th>
+    </thead>
+    <tr>
+      <td>{{device_detail.device_name}}</td>
+      <td>{{device_detail.device_ip}}</td>
+      <td>{{device_detail.device_model}}</td>
+      <td>{{device_detail.device_sn}}</td>
+      <td>{{device_detail.site.site_name}}</td>
+    </tr>
+  </table>
+  <br>
+</div>
+{%endblock content %}

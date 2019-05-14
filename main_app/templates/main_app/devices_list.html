@@ -1,0 +1,42 @@
+{% extends 'main_app/main_app_base.html' %}
+
+
+{%block content %}
+
+
+
+  <div class="container">
+
+  <h1><strong>Devices:</strong></h1>
+
+
+    <table class="table table-bordered">
+      <thead class="thead-dark">
+        <th>#</th>
+        <th>Device Name</th>
+        <th>Device IP</th>
+        <th>Device Model</th>
+        <th>Serial Number</th>
+        <th>Site</th>
+      </thead>
+      {% for device in devices %}
+      <tr>
+          <td>{{device.id}}</td>
+          <td><h4>{{device.device_name}}</h4></td>
+          <td><h4>{{device.device_ip}}</h4></td>
+          <td><h4>{{device.device_model}}</h4></td>
+          <td><h4>{{device.device_sn}}</h4></td>
+          <td><h4><a href="sites/{{ device.site.id }}">{{device.site.site_name}}</a></h4></td>
+      </tr>
+      {%endfor%}
+    </table>
+  </div>
+  <div class="container">
+    <a href="{% url 'main_app:createdevice' %}">
+      <input class="btn btn-success" type="submit" value="Create">
+    </a>
+
+  </div>
+
+
+{%endblock content %}
