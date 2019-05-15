@@ -49,3 +49,20 @@ class DeviceCreateView(CreateView):
                 'device_model', 'device_sn',
                 'site')
     model = models.Devices
+
+
+class DeviceUpdateView(UpdateView):
+    fields = ('device_name', 'device_ip',
+                'device_model', 'device_sn',
+                'site')
+    model = models.Devices
+
+class DeviceDeleteView(DeleteView):
+    context_object_name = 'device'
+    model = models.Devices
+    success_url = reverse_lazy('main_app:viewdevices')
+
+class DeviceConfigDetailView(ListView):
+    context_object_name = 'deviceconfig'
+    model = models.Devices
+    template_name = 'main_app/deviceconfig_view.html'

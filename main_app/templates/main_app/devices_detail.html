@@ -12,6 +12,8 @@
       <th>Model</th>
       <th>Serial Number</th>
       <th>Site</th>
+      <th>Config</th>
+      <th>Script</th>
     </thead>
     <tr>
       <td>{{device_detail.device_name}}</td>
@@ -19,8 +21,16 @@
       <td>{{device_detail.device_model}}</td>
       <td>{{device_detail.device_sn}}</td>
       <td>{{device_detail.site.site_name}}</td>
+      <td><a href="{% url 'main_app:deviceconfig' pk=device_detail.id %}" style="padding:20px">Config</a><button type="button" class="btn btn-outline-success"><i class="material-icons" style="font-size:20px;color:green">sync</i></button></td>
+      <td><a href="#" style="padding:20px">Script</a><button type="button" class="btn btn-outline-success"><i class="material-icons" style="font-size:20px;color:green">sync</i></button></td>
     </tr>
   </table>
   <br>
+  <a href="{% url 'main_app:updatedevice' pk=device_detail.id%}">
+    <button class="btn btn-warning"type="submit">Edit</button>
+  </a>
+  <a href="{% url 'main_app:deletedevice' pk=device_detail.id%}">
+    <button class="btn btn-danger"type="submit">Delete</button>
+  </a>
 </div>
 {%endblock content %}

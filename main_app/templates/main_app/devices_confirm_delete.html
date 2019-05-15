@@ -1,0 +1,16 @@
+{% extends 'main_app/main_app_base.html' %}
+{% load crispy_forms_tags %}
+
+{%block content %}
+<div class="container">
+  <form method="post">
+    {% csrf_token %}
+    <br>
+    <p>Are you sure you want to delete {{device.device_name}}?</p>
+    <input class="btn btn-danger" type="submit" value="Delete">
+    <a href="{% url 'main_app:devicedetail' pk=device.id%}"><input class="btn btn-primary" type="button" value="Cancel"></a>
+
+  </form>
+</div>
+
+{%endblock content %}

@@ -15,17 +15,13 @@
         <th>#</th>
         <th>Device Name</th>
         <th>Device IP</th>
-        <th>Device Model</th>
-        <th>Serial Number</th>
         <th>Site</th>
       </thead>
       {% for device in devices %}
       <tr>
           <td>{{device.id}}</td>
-          <td><h4>{{device.device_name}}</h4></td>
+          <td><h4><a href="devices/{{device.id}}">{{device.device_name}}</a></h4></td>
           <td><h4>{{device.device_ip}}</h4></td>
-          <td><h4>{{device.device_model}}</h4></td>
-          <td><h4>{{device.device_sn}}</h4></td>
           <td><h4><a href="sites/{{ device.site.id }}">{{device.site.site_name}}</a></h4></td>
       </tr>
       {%endfor%}

@@ -32,3 +32,10 @@ class Devices(models.Model):
 
     def get_absolute_url(self):
         return reverse('main_app:devicedetail', kwargs={'pk': self.pk})
+
+class DeviceConfig (models.Model):
+
+    device_config = models.TextField(null=True)
+    device_script = models.TextField(null=True)
+    device_id = models.OneToOneField(Devices, on_delete=models.CASCADE,
+                                    related_name = 'config', primary_key=True)

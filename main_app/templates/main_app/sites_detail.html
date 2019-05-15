@@ -30,7 +30,8 @@
   </a>
 </div>
 <div class="container">
-  <h2>Devices:</h2>
+  <br>
+  <h2>Registered devices</h2>
   <br>
   <table class="table table-bordered">
     <thead  class="thead-dark">
@@ -41,7 +42,7 @@
     </thead>
     {% for device in sites_detail.devices.all %}
       <tr>
-        <td>{{device.device_name}}</td>
+        <td><a href="{% url 'main_app:devicedetail' pk=device.id%}"><strong>{{device.device_name}}</strong></a></td>
         <td>{{device.device_ip}}</td>
         <td>{{device.device_model}}</td>
         <td>{{device.device_sn}}</td>
