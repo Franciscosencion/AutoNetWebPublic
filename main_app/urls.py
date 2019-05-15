@@ -13,7 +13,8 @@ urlpatterns = [
     path('create/', views.SiteCreateView.as_view(), name='createsite'),
     path('create_device/', views.DeviceCreateView.as_view(), name='createdevice'),
     path('devices/<int:pk>', views.DeviceDetailView.as_view(), name='devicedetail'),
-    path('devices/<int:pk>/config/', views.DeviceConfigDetailView.as_view(), name='deviceconfig'),
+    path('devices/config/<int:pk>', views.DeviceConfigDetailView.as_view(), name='deviceconfig'),
+    path('devices/script/<int:pk>', views.DeviceScriptDetailView.as_view(), name='devicescript'),
     path('updatedevice/<int:pk>', views.DeviceUpdateView.as_view(), name='updatedevice'),
     path('deletedevice/<int:pk>', views.DeviceDeleteView.as_view(), name='deletedevice'),
 
