@@ -1,9 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import (TemplateView, ListView, DetailView,
                                     CreateView, UpdateView, DeleteView)
 from django.contrib import messages
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
+from django.http import HttpResponse, HttpResponseRedirect
 from . import models
+from script.pullconfig_script import sync_config
 # Create your views here.
 
 class HomeTemplateView(TemplateView):
@@ -107,3 +109,28 @@ class DeviceScriptDetailView(DetailView):
     context_object_name = 'devicescript'
     model = models.DeviceConfig
     template_name = 'main_app/devicescript_view.html'
+
+class DeviceConfigDeleteView(DeleteView):
+    context_object_name = 'deviceconfig'
+    model = models.DeviceConfig
+    success_url = reverse_lazy('main_app:viewdevices')
+
+
+def testtempalteview(request, deviceip, deviceid):
+    success_url = f'devices/{deviceid}'
+    try:
+
+        script = sync_config(deviceip, deviceid)
+        # return HttpResponse(f"<p1>{script}</p1>")
+        if script:
+            messages.add_message(
+                request, messages.SUCCESS, f'{deviceip} config sync done!')
+            return HttpResponseRedirect(reverse(f'main_app:devicedetail',
+                                            kwargs={'pk': deviceid}))
+        else:
+            messages.add_message(
+                request, messages.WARNING, 'Sync Failed')
+            return HttpResponseRedirect(reverse(f'main_app:devicedetail',
+                                            kwargs={'pk': deviceid}))
+    except Exception as error:
+        return HttpResponse(f"<p1>{error}</p1>")

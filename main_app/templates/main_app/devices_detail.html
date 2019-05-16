@@ -21,7 +21,7 @@
       <td>{{device_detail.device_model}}</td>
       <td>{{device_detail.device_sn}}</td>
       <td>{{device_detail.site.site_name}}</td>
-      <td><a href="config/{{device_detail.id}}" style="padding:20px">Config</a><button type="button" class="btn btn-outline-success"><i class="material-icons" style="font-size:20px;color:green">sync</i></button></td>
+      <td><a href="config/{{device_detail.id}}" style="padding:20px">Config</a><a href="{{device_detail.device_ip}}&{{device_detail.id}}"><button type="button" class="btn btn-outline-success"><i class="material-icons" style="font-size:20px;color:green">sync</i></button></a></td>
       <td><a href="script/{{device_detail.id}}" style="padding:20px">Script</a><button type="button" class="btn btn-outline-success"><i class="material-icons" style="font-size:20px;color:green">sync</i></button></td>
     </tr>
   </table>

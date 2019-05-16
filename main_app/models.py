@@ -37,5 +37,6 @@ class DeviceConfig (models.Model):
 
     device_config = models.TextField(null=True)
     device_script = models.TextField(null=True)
+    last_modify = models.DateTimeField(null=True)
     device_id = models.OneToOneField(Devices, on_delete=models.CASCADE,
                                     related_name = 'config', primary_key=True)
