@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic import (TemplateView, ListView, DetailView,
                                     CreateView, UpdateView, DeleteView)
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponse, HttpResponseRedirect
@@ -115,8 +116,8 @@ class DeviceConfigDeleteView(DeleteView):
     model = models.DeviceConfig
     success_url = reverse_lazy('main_app:viewdevices')
 
-
-def testtempalteview(request, deviceip, deviceid):
+@login_required
+def sync_configuration(request, deviceip, deviceid):
     success_url = f'devices/{deviceid}'
     try:
 

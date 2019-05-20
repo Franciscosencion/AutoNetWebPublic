@@ -1,0 +1,42 @@
+{% extends 'users/login_base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div id="container">
+  <div id="header">
+    <div id="branding">
+      <h1 id="site-name"><strong>AutoNet</strong></h1>
+    </div>
+  </div>
+  <form id="login-form" method="POST">
+    <div class="form-group">
+      <div id="content" class="colm">
+      <fieldset>
+          <legend><strong>Log In</strong></legend>
+      </fieldset>
+        <div id="content-main" >
+          {% csrf_token %}
+            {{ form.as_p }}
+          <div class="submit-row">
+            <input class="btn btn-outline-info" type="submit" value="Login">
+          </div>
+          <input type="hidden" name="next" value="{{ next }}">
+        </div>
+        <br class="clear">
+        <br class="clear">
+        <fieldset>
+        <br class="clear">
+        <small>
+         <a class="text-muted" href="#">Forgot password?</a>
+        </small>
+        </fieldset>
+      </div>
+    </div>
+  </form>
+  <div>
+
+  </div>
+</div>
+</div>
+
+{% endblock %}

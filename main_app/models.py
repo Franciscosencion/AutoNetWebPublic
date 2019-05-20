@@ -40,3 +40,6 @@ class DeviceConfig (models.Model):
     last_modify = models.DateTimeField(null=True)
     device_id = models.OneToOneField(Devices, on_delete=models.CASCADE,
                                     related_name = 'config', primary_key=True)
+
+    def __str__(self):
+        return self.device_id.device_name
