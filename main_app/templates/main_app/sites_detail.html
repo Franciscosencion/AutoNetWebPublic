@@ -2,7 +2,15 @@
 
 
 {%block content %}
-<div class="container">
+<div class="container shadow-sm p-3 mb-5 bg-white rounded">
+  <div class="float-right">
+    <a href="{% url 'main_app:updatesite' pk=sites_detail.id%}">
+      <button class="btn btn-warning mr-1"type="submit">Edit</button>
+    </a>
+    <a href="{% url 'main_app:deletesite' pk=sites_detail.id%}">
+      <button class="btn btn-danger"type="submit">Delete</button>
+    </a>
+  </div>
   <h2>Site Details:</h2>
   <br>
   <table class="table">
@@ -21,15 +29,8 @@
       <td>{{sites_detail.site_poc_number}}</td>
     </tr>
   </table>
-  <br>
-  <a href="{% url 'main_app:updatesite' pk=sites_detail.id%}">
-    <button class="btn btn-warning"type="submit">Edit</button>
-  </a>
-  <a href="{% url 'main_app:deletesite' pk=sites_detail.id%}">
-    <button class="btn btn-danger"type="submit">Delete</button>
-  </a>
 </div>
-<div class="container">
+<div class="container shadow-sm p-3 mb-5 bg-white rounded">
   <br>
   <h2>Registered devices</h2>
   <br>

@@ -2,13 +2,13 @@
 
 
 {%block content %}
-  <div class="container">
-    <div class="p-3 mb-2 bg-white text-dark">
-      <figure >
+  <div class="container shadow-sm p-3 mb-5 bg-white rounded">
+    <div class="p-3 mb-2 bg-light text-dark">
         <pre>
-          <code>{{deviceconfig.device_config}}</code>
+          <div>
+            <code>{{deviceconfig.device_config}}</code>
+          </div>
         </pre>
-      </figure>
     </div>
     <br>
     <p class="text-right text-success">Last modified: {{deviceconfig.last_modify}}</p>

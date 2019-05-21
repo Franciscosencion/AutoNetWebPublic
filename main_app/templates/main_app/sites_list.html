@@ -2,26 +2,26 @@
 
 
 {%block content %}
-  <div class="container">
-  <h1><strong>Sites:</strong></h1>
-    <table class="table table-bordered">
-      <thead class="thead-dark">
-        <th>#</th>
-        <th>Site Name</th>
-        <th>Location</th>
-      </thead>
-      {% for site in sites %}
-      <tr>
-          <td>{{site.id}}</td>
-          <td><h4><a href="sites/{{ site.id }}">{{site.site_name}}</a></h4></td>
-          <td><h4>{{site.site_location}}</h4></td>
-      </tr>
-      {%endfor%}
-    </table>
-  </div>
-  <div class="container">
-    <a href="{% url 'main_app:createsite' %}">
-      <input class="btn btn-success" type="submit" value="Create">
-    </a>
-  </div>
+  <div class="container shadow-sm p-3 mb-5 bg-white rounded">
+    <div class="container">
+      <a href="{% url 'main_app:createsite' %}">
+        <input class="btn btn-success  float-right" type="submit" value="Create">
+      </a>
+    </div>
+    <div class="">
+      <h1><strong>Sites:</strong></h1>
+        <table class="table table-bordered">
+          <thead class="thead-dark">
+            <th>Site Name</th>
+            <th>Location</th>
+          </thead>
+          {% for site in sites %}
+          <tr>
+              <td><h4><a href="sites/{{ site.id }}">{{site.site_name}}</a></h4></td>
+              <td><h4>{{site.site_location}}</h4></td>
+          </tr>
+          {%endfor%}
+        </table>
+      </div>
+    </div>
 {%endblock content %}
