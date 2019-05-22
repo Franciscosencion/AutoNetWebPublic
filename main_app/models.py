@@ -17,11 +17,14 @@ class Sites(models.Model):
         return reverse('main_app:sitesdetail', kwargs={'pk': self.pk})
 
 class Devices(models.Model):
-
+    VENDOR_LIST = (('C', 'Cisco'),
+                                    ('J', 'Juniper'),
+                                    ('A', 'Arista'),
+                                    )
     device_name = models.CharField(max_length=100)
-    device_ip = models.CharField(max_length=40)
-    device_model = models.CharField(max_length=100)
-    device_sn = models.CharField(max_length=250)
+    device_ip = models.GenericIPAddressField()
+    vendor = models.CharField(choices=VENDOR_LIST, max_length=10,
+                                                default=VENDOR_LIST[0])
     site = models.ForeignKey(Sites,
                             on_delete=models.CASCADE,
                             related_name = 'devices',
@@ -33,8 +36,9 @@ class Devices(models.Model):
     def get_absolute_url(self):
         return reverse('main_app:devicedetail', kwargs={'pk': self.pk})
 
-class DeviceConfig (models.Model):
-
+class DeviceDetail (models.Model):
+    device_model = models.CharField(max_length=100, null=True)
+    device_sn = models.CharField(max_length=250, null=True)
     device_config = models.TextField(null=True)
     device_script = models.TextField(null=True)
     last_modify = models.DateTimeField(null=True)

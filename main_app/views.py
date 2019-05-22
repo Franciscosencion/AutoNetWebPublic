@@ -70,8 +70,7 @@ class DeviceDetailView(DetailView):
 
 class DeviceCreateView(CreateView):
     fields = ('device_name', 'device_ip',
-                'device_model', 'device_sn',
-                'site')
+                'vendor',  'site')
     model = models.Devices
 
     def form_valid(self, form):
@@ -83,8 +82,7 @@ class DeviceCreateView(CreateView):
 
 class DeviceUpdateView(UpdateView):
     fields = ('device_name', 'device_ip',
-                'device_model', 'device_sn',
-                'site')
+                'site', 'vendor')
     model = models.Devices
 
     def form_valid(self, form):
@@ -102,18 +100,18 @@ class DeviceDeleteView(DeleteView):
 
 class DeviceConfigDetailView(DetailView):
     context_object_name = 'deviceconfig'
-    model = models.DeviceConfig
+    model = models.DeviceDetail
     template_name = 'main_app/deviceconfig_view.html'
 
 
 class DeviceScriptDetailView(DetailView):
     context_object_name = 'devicescript'
-    model = models.DeviceConfig
+    model = models.DeviceDetail
     template_name = 'main_app/devicescript_view.html'
 
 class DeviceConfigDeleteView(DeleteView):
     context_object_name = 'deviceconfig'
-    model = models.DeviceConfig
+    model = models.DeviceDetail
     success_url = reverse_lazy('main_app:viewdevices')
 
 @login_required

@@ -1,4 +1,4 @@
-import os, datetime
+import os, datetime, re
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'NetAutoMgmt.settings')
 import django
 django.setup()
@@ -10,11 +10,32 @@ from paramiko.ssh_exception import SSHException
 from multiprocessing import Pool
 
 
-from main_app.models import DeviceConfig
+from main_app.models import DeviceDetail, Devices
 
 _config = """
 This is a test config run using an automated script
 """
+class PatternFinder:
+    """
+    this class will be use to perform regex seraching for any given pattern and data
+    """
+    def __init__(self, pattern, data):
+        self.pattern = pattern
+        self.data = data
+
+    def find_match(self):
+        """this method will perform the pattern search and return match"""
+        pattern = re.compile(self.pattern)
+        match = pattern.finditer(self.data)
+        try:
+            match = [x.group(1) for x in match]
+            if len(match) > 1:
+                match = ", ".join(match)
+            return match
+        except Exception as error:
+            return(error)
+
+
 def sync_config(device_ip, device_id):
 
     """
@@ -35,6 +56,19 @@ def sync_config(device_ip, device_id):
         with session:
             session.enable()
             config = session.send_command("show running-config")
+            #device model
+            device_object = Devices.objects.get(id=device_id)
+            #find serial number & model
+            if device_object.vendor == "C":
+                # serial number goes here
+                inventory = session.send_command("show inventory")
+                serial_number_match = PatternFinder(r'SN.\s{0,}(FOC.+)', inventory)
+                serial_number_match = serial_number_match.find_match()
+                # model goes here
+                #inventory = session.send_command("show inventory")
+                #serial_number_match = PatternFinder(r'SN.\s{0,}(FOC.+)', inventory)
+                #serial_number_match = serial_number_match.find_match()
+
 
     except Exception as error:
         return None
@@ -46,7 +80,7 @@ def sync_config(device_ip, device_id):
     #     return "Unable to connect via SSH. SSH enabled?"
     record_exist = None
     try:
-        record_exist = DeviceConfig.objects.get(device_id_id=device_id)
+        record_exist = DeviceDetail.objects.get(device_id_id=device_id)
     except:
         # if record does not exist variable record_exist will remain as None
         # This will result in following statement returning False and new record
@@ -55,13 +89,14 @@ def sync_config(device_ip, device_id):
 
     if record_exist:
         # update record if configuration record exist
-        sync_conf = DeviceConfig.objects.filter(device_id_id=device_id).update(
+        sync_conf = DeviceDetail.objects.filter(device_id_id=device_id).update(
                                 device_config=config,
                                 device_script="NA",
+                                device_sn = serial_number_match,
                                 last_modify=datetime.datetime.now())
     else:
         # create new configuration record
-        sync_conf = DeviceConfig.objects.get_or_create(
+        sync_conf = DeviceDetail.objects.get_or_create(
                                 device_config=config,
                                 device_script="NA",
                                 device_id_id=device_id,

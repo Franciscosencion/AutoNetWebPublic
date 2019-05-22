@@ -4,4 +4,4 @@ from . import models
 
 admin.site.register(models.Sites)
 admin.site.register(models.Devices)
-admin.site.register(models.DeviceConfig)
+admin.site.register(models.DeviceDetail)
