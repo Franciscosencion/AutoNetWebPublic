@@ -62,7 +62,7 @@ def sync_config(device_ip, device_id):
             if device_object.vendor == "C":
                 # serial number goes here
                 inventory = session.send_command("show inventory")
-                serial_number_match = PatternFinder(r'SN.\s{0,}(FOC.+)', inventory)
+                serial_number_match = PatternFinder(r'SN.\s{0,}(9V.+)', inventory)
                 serial_number_match = serial_number_match.find_match()
                 # model goes here
                 #inventory = session.send_command("show inventory")
@@ -92,7 +92,7 @@ def sync_config(device_ip, device_id):
         sync_conf = DeviceDetail.objects.filter(device_id_id=device_id).update(
                                 device_config=config,
                                 device_script="NA",
-                                device_sn = serial_number_match,
+                                device_sn = serial_number_match[0],
                                 last_modify=datetime.datetime.now())
     else:
         # create new configuration record
@@ -100,6 +100,7 @@ def sync_config(device_ip, device_id):
                                 device_config=config,
                                 device_script="NA",
                                 device_id_id=device_id,
+                                device_sn = serial_number_match[0],
                                 last_modify=datetime.datetime.now())[0]
         sync_conf.save()
     return HttpResponse(status=201)
