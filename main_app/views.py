@@ -4,7 +4,8 @@ from django.views.generic import (TemplateView, ListView, DetailView,
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.urls import reverse_lazy, reverse
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.db.models import Q as Query
 from . import models
 from script.pullconfig_script import sync_config
 # Create your views here.
@@ -133,3 +134,20 @@ def sync_configuration(request, deviceip, deviceid):
                                             kwargs={'pk': deviceid}))
     except Exception as error:
         return HttpResponse(f"<p1>{error}</p1>")
+
+
+@login_required
+def device_search_function(request):
+    name = request.GET.get('item')
+    # return HttpResponse(f'<h2>{name}</h2>')
+    try:
+        # results = models.Devices.objects.active()
+        results = models.Devices.objects.filter(
+                    Query(device_name__startswith=name) |
+                    Query(device_name__icontains=name) |
+                    Query(device_ip__startswith=name) |
+                    Query(device_ip__icontains=name)
+                    )
+    except Exception as error:
+        return Http404(f'No match found for {name}')
+    return render(request, 'main_app/results.html', {'results':results})

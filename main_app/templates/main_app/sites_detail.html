@@ -38,15 +38,11 @@
     <thead  class="thead-dark">
       <th>Device Name</th>
       <th>Device IP</th>
-      <th>Model</th>
-      <th>Serial Number</th>
     </thead>
     {% for device in sites_detail.devices.all %}
       <tr>
         <td><a href="{% url 'main_app:devicedetail' pk=device.id%}"><strong>{{device.device_name}}</strong></a></td>
         <td>{{device.device_ip}}</td>
-        <td>{{device.device_model}}</td>
-        <td>{{device.device_sn}}</td>
       </tr>
     {% endfor %}
 

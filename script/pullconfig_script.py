@@ -81,7 +81,7 @@ def sync_config(device_ip, device_id):
     record_exist = None
     try:
         record_exist = DeviceDetail.objects.get(device_id_id=device_id)
-    except:
+    except Exception:
         # if record does not exist variable record_exist will remain as None
         # This will result in following statement returning False and new record
         # being created.

@@ -1,0 +1,27 @@
+{% extends 'main_app/main_app_base.html' %}
+
+{%block content %}
+    {% csrf_token %}
+    <div class="container shadow-sm p-3 mb-5 bg-white rounded">
+    {% if results %}
+        <h3>Search result:</h3>
+        <table class="table table-bordered">
+            <thead class="thead-dark">
+                <th>Host Name</th>
+                <th>IP Address</th>
+                <th>Location</th>
+            </thead>
+            {%for result in results%}
+                <tr>
+                    <td><a href="{% url 'main_app:devicedetail' pk=result.id%}">{{result.device_name}}</a> </td>
+                    <td>{{result.device_ip}}</td>
+                    <td><a href="{% url 'main_app:sitesdetail' pk=result.site.id%}">{{result.site.site_name}}</a></td>
+                </tr>
+            {%endfor%}
+            </table>
+
+    {%else%}
+        <h2>No Match found</h2>
+    {%endif%}
+    </div>
+{%endblock content %}
