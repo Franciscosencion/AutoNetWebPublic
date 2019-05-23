@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.utils import timezone
 # Create your models here.
 
 class Sites(models.Model):
@@ -41,7 +42,7 @@ class DeviceDetail (models.Model):
     device_sn = models.CharField(max_length=250, null=True)
     device_config = models.TextField(null=True)
     device_script = models.TextField(null=True)
-    last_modify = models.DateTimeField(null=True)
+    last_modify = models.DateTimeField(auto_now=True) #null=True
     device_id = models.OneToOneField(Devices, on_delete=models.CASCADE,
                                     related_name = 'config', primary_key=True)
 

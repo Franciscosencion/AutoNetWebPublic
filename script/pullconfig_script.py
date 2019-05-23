@@ -92,16 +92,16 @@ def sync_config(device_ip, device_id):
         sync_conf = DeviceDetail.objects.filter(device_id_id=device_id).update(
                                 device_config=config,
                                 device_script="NA",
-                                device_sn = serial_number_match[0],
-                                last_modify=datetime.datetime.now())
+                                device_sn = serial_number_match[0])
+        #last_modify=datetime.datetime.now()
     else:
         # create new configuration record
         sync_conf = DeviceDetail.objects.get_or_create(
                                 device_config=config,
                                 device_script="NA",
                                 device_id_id=device_id,
-                                device_sn = serial_number_match[0],
-                                last_modify=datetime.datetime.now())[0]
+                                device_sn = serial_number_match[0])[0]
+        #last_modify=datetime.datetime.now()
         sync_conf.save()
     return HttpResponse(status=201)
 
