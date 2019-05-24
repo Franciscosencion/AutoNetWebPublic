@@ -11,7 +11,10 @@
         </pre>
     </div>
     <br>
-    <p class="text-right text-success">Last modified: {{deviceconfig.last_modify}} UTC</p>
+    <div >
+      <p class="text-right text-info"><em>Created on: {{deviceconfig.config_created}} UTC</em></p>
+      <p class="text-right text-success"><em>Last modified: {{deviceconfig.last_modify}} UTC</em></p>
+    </div>
     <div>
       <a href="{% url 'main_app:devicedetail' pk=deviceconfig.pk%}"><button class="btn btn-primary" type="button">Back</button></a>
       <a href="{% url 'main_app:deleteconfig' pk=deviceconfig.pk%}"><button class="btn btn-danger" type="submit">Delete</button></a>

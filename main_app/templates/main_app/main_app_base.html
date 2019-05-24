@@ -16,7 +16,7 @@
     <div class="mb-4">
 
 
-      <nav class="navbar navbar-expand-lg navbar-dark fixed-top " style="background-color: #584E76;">
+      <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #584E76;">
         <a class="navbar-brand" href="{% url 'main_app:home' %}">AutoNet</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -50,7 +50,7 @@
             {% endif %}
           </div>
           <form class="form-inline my-2 my-lg-0" action="{% url 'main_app:search'%}" method="get">
-              <input class="form-control mr-sm-2" type="search"  name="item" placeholder="Hostname or IP" aria-label="Search">
+              <input class="form-control ml-2 mr-sm-2 " type="search"  name="item" placeholder="Hostname or IP" aria-label="Search">
               <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
 

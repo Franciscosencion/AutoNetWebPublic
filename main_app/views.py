@@ -141,7 +141,7 @@ def device_search_function(request):
     name = request.GET.get('item')
     # return HttpResponse(f'<h2>{name}</h2>')
     try:
-        # results = models.Devices.objects.active()
+        #results = models.Devices.objects.active()
         results = models.Devices.objects.filter(
                     Query(device_name__startswith=name) |
                     Query(device_name__icontains=name) |
@@ -149,5 +149,5 @@ def device_search_function(request):
                     Query(device_ip__icontains=name)
                     )
     except Exception as error:
-        return Http404(f'No match found for {name}')
+        return HttpResponse(error)
     return render(request, 'main_app/results.html', {'results':results})

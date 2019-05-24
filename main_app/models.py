@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
+from django.contrib.auth.models import User
 # Create your models here.
 
 class Sites(models.Model):
@@ -30,7 +31,7 @@ class Devices(models.Model):
                             on_delete=models.CASCADE,
                             related_name = 'devices',
                             )
-
+    objects = models.Manager()
     def __str__(self):
         return self.device_name
 
@@ -42,6 +43,9 @@ class DeviceDetail (models.Model):
     device_sn = models.CharField(max_length=250, null=True)
     device_config = models.TextField(null=True)
     device_script = models.TextField(null=True)
+    #created_by = models.ForeignKey(User, related_name='createdby',
+    #                                    on_delete=models.PROTECT, null=True)
+    config_created = models.DateTimeField(auto_now_add=True)
     last_modify = models.DateTimeField(auto_now=True) #null=True
     device_id = models.OneToOneField(Devices, on_delete=models.CASCADE,
                                     related_name = 'config', primary_key=True)
