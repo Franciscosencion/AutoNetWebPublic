@@ -18,6 +18,7 @@ class HomeTemplateView(TemplateView):
 class SitesListView(ListView):
     context_object_name = 'sites'
     model = models.Sites
+    paginate_by = 10
 
 
 class SitesDetailView(DetailView):
@@ -61,6 +62,8 @@ class SiteDeleteView(DeleteView):
 class DeviceListView(ListView):
     context_object_name = 'devices'
     model = models.Devices
+    paginate_by = 10
+
 
 
 class DeviceDetailView(DetailView):
