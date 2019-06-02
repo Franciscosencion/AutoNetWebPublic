@@ -1,0 +1,97 @@
+
+.textinputclass {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #d3d1d1;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.textinputclass:focus {
+  border: 2px solid rgba(107, 183, 255, 0.4);
+}
+
+.btn_class {
+  color: white;
+  padding: 5px 15px;
+  margin: 0px 5px;
+  border-radius: 4px;
+}
+
+#btn-cancel {
+  background-color: #1979ff;
+  color: white;
+  padding: 5px 15px;
+  margin: 0px 5px;
+  border: 1px solid #0f7fff;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+#btn-cancel:hover {
+  background-color: #185dff;
+}
+
+#btn-save {
+  background-color: #27911b;
+  color: white;
+  padding: 5px 15px;
+  margin: 0px 5px;
+  border: 1px solid #2eaa20;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+#btn-save:hover {
+  background-color: #237f19;
+}
+
+#btn-delete {
+  background-color: #db0808;
+  color: white;
+  padding: 5px 15px;
+  margin: 0px 5px;
+  border: 1px solid #ff4444;
+  border-radius: 4px;
+  font-weight: bold;
+
+}
+
+#btn-delete:hover {
+  background-color: #ad0000;
+}
+
+#btn-back {
+  background-color: #1979ff;
+  color: white;
+  padding: 5px 15px;
+  margin: 0px 5px;
+  border: 1px solid #0f7fff;
+  border-radius: 4px;
+  font-weight: bold;
+
+}
+
+#btn-back:hover {
+  background-color: #185dff;
+}
+
+.mycustom-select {
+  display: inline-block;
+  width: 100%;
+  height: calc(2.25rem + 2px);
+  padding: .375rem 1.75rem .375rem .75rem;
+  line-height: 1.5;
+  color: #495057;
+  vertical-align: middle;
+  background: #fff url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E") no-repeat right .75rem center;
+  background-size: auto;
+  background-size: 8px 10px;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}

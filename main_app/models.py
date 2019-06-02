@@ -43,8 +43,8 @@ class DeviceDetail (models.Model):
     device_sn = models.CharField(max_length=250, null=True)
     device_config = models.TextField(null=True)
     device_script = models.TextField(null=True)
-    #created_by = models.ForeignKey(User, related_name='createdby',
-    #                                    on_delete=models.PROTECT, null=True)
+    created_by = models.ForeignKey("auth.User", related_name='createdby',
+                                        on_delete=models.PROTECT, null=True)
     config_created = models.DateTimeField(auto_now_add=True)
     last_modify = models.DateTimeField(auto_now=True) #null=True
     device_id = models.OneToOneField(Devices, on_delete=models.CASCADE,

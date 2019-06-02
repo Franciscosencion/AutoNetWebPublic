@@ -1,6 +1,8 @@
 {% extends 'main_app/main_app_base.html' %}
 {% load crispy_forms_tags %}
 
+
+
 {%block content %}
 <div class="container shadow-sm p-3 mb-5 bg-white rounded">
   <form class="form-group" method="post">
@@ -10,8 +12,8 @@
     {% csrf_token %}
     {{ form|crispy }}
     <br>
-    <a href="{% url 'main_app:viewdevices' %}"><input class="btn btn-primary" type="button" value="Cancel"></a>
-    <input class="btn btn-success" type="submit" value="Save">
+    <a href="{% url 'main_app:viewdevices' %}"><input id="btn-cancel" class="btn_class" type="button" value="Cancel"></a>
+    <input id="btn-save" class="btn_class"  type="submit" value="Save">
   </form>
 </div>
 

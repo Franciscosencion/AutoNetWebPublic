@@ -8,6 +8,7 @@ from django.urls import reverse_lazy, reverse
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.db.models import Q as Query
 from . import models
+from .forms import SitesForm, DeviceForm
 from script.pullconfig_script import sync_config
 
 # Create your views here.
@@ -30,9 +31,10 @@ class SitesDetailView(LoginRequiredMixin, DetailView):
 
 
 class SiteCreateView(LoginRequiredMixin, CreateView):
-    fields = ('site_name', 'site_location',
-                'site_poc_name', 'site_poc_number',
-                'site_address')
+    # fields = ('site_name', 'site_location',
+    #             'site_poc_name', 'site_poc_number',
+    #             'site_address')
+    form_class = SitesForm
     model = models.Sites
 
     def form_valid(self, form):
@@ -43,7 +45,8 @@ class SiteCreateView(LoginRequiredMixin, CreateView):
 
 
 class SiteUpdateView(LoginRequiredMixin, UpdateView):
-    fields = ('site_name', 'site_poc_name', 'site_poc_number')
+    # fields = ('site_name', 'site_poc_name', 'site_poc_number')
+    form_class = SitesForm
     model = models.Sites
 
     def form_valid(self, form):
@@ -75,8 +78,9 @@ class DeviceDetailView(LoginRequiredMixin, DetailView):
 
 
 class DeviceCreateView(LoginRequiredMixin, CreateView):
-    fields = ('device_name', 'device_ip',
-                'vendor',  'site')
+    # fields = ('device_name', 'device_ip',
+    #             'vendor',  'site')
+    form_class = DeviceForm
     model = models.Devices
 
     def form_valid(self, form):
@@ -87,8 +91,9 @@ class DeviceCreateView(LoginRequiredMixin, CreateView):
 
 
 class DeviceUpdateView(LoginRequiredMixin, UpdateView):
-    fields = ('device_name', 'device_ip',
-                'site', 'vendor')
+    # fields = ('device_name', 'device_ip',
+    #             'site', 'vendor')
+    form_class = DeviceForm
     model = models.Devices
 
     def form_valid(self, form):

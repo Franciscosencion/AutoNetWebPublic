@@ -2,7 +2,9 @@
 {% load crispy_forms_tags %}
 
 {%block content %}
+
 <div class="container shadow-sm p-3 mb-5 bg-white rounded">
+
   <fieldset>
     <h3>Create Site</h3>
   </fieldset>
@@ -11,9 +13,9 @@
     {{ form|crispy }}
     <br>
     <a href="{% url 'main_app:viewsites'%}">
-      <input class="btn btn-primary" type="button" value="Cancel">
+      <input id="btn-cancel" class="btn_class" type="button" value="Cancel">
     </a>
-    <input class="btn btn-success" type="submit" value="Save">
+    <input id="btn-save" class="btn_class" type="submit" value="Save">
   </form>
 </div>
 

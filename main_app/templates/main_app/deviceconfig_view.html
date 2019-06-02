@@ -13,11 +13,11 @@
     <br>
     <div >
       <p class="text-right text-info"><em>Created on: {{deviceconfig.config_created}} UTC</em></p>
-      <p class="text-right text-success"><em>Last modified: {{deviceconfig.last_modify}} UTC</em></p>
+      <p class="text-right text-success"><em>Last modified by {{User.createdby.created_by}}: {{deviceconfig.last_modify}} UTC</em></p>
     </div>
     <div>
-      <a href="{% url 'main_app:devicedetail' pk=deviceconfig.pk%}"><button class="btn btn-primary" type="button">Back</button></a>
-      <a href="{% url 'main_app:deleteconfig' pk=deviceconfig.pk%}"><button class="btn btn-danger" type="submit">Delete</button></a>
+      <a href="{% url 'main_app:devicedetail' pk=deviceconfig.pk%}"><button class="btn_class" id="btn-back" type="button">Back</button></a>
+      <a href="{% url 'main_app:deleteconfig' pk=deviceconfig.pk%}"><button class="btn_class" id="btn-delete" type="submit">Delete</button></a>
     </div>
     <br>
   </div>
