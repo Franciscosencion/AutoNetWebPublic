@@ -5,12 +5,10 @@
 {% load staticfiles %}
 <link rel="stylesheet" href="{% static 'css/login_css.css' %}">
 <div id="container">
-    <div class="login-header-color" >
-      <h1 id="brand-name" ><strong>AutoNet</strong></h1>
-    </div>
-    <div >
-      <img id="user-logo" src="{% static 'users/login.png' %}" alt="">
-    </div>
+  <div class="login-header-color" >
+    <h1 id="brand-name" ><strong>AutoNet</strong></h1>
+  </div>
+  <img id="user-logo" src="{% static 'users/login.png' %}" alt="">
   <form id="login-form" method="POST">
     <div class="form-group">
       <div id="content" class="colm">
