@@ -2,22 +2,27 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
+{% load staticfiles %}
+<link rel="stylesheet" href="{% static 'css/login_css.css' %}">
 <div id="container">
-    <div style="background-color: #584E76;">
-      <h1 style="font-size: auto; padding: 10px 0px; color: white; text-align: center;"><strong>AutoNet</strong></h1>
+    <div class="login-header-color" >
+      <h1 id="brand-name" ><strong>AutoNet</strong></h1>
+    </div>
+    <div >
+      <img id="user-logo" src="{% static 'users/login.png' %}" alt="">
     </div>
   <form id="login-form" method="POST">
     <div class="form-group">
       <div id="content" class="colm">
-      <fieldset style="padding: 10px 0px; font-size: 16px;">
+      <fieldset id="custom-fieldset">
           <legend><strong>Log In</strong></legend>
       </fieldset>
-        <div style="font-size: 16px;">
+        <div id="form-div">
           {% csrf_token %}
             {{ form.as_p }}
         </div>
         <div class="submit-row">
-          <input style="padding: 5px 16px; border-radius: 5px; font-size: 16px; " type="submit" value="Login">
+          <input id="login-btn" type="submit" value="Login">
         </div>
         <input type="hidden" name="next" value="{{ next }}">
         <br class="clear">
@@ -25,7 +30,7 @@
         <fieldset style="padding: 10px;">
         <br class="clear">
         <small>
-         <a class="text-muted" style="font-family: inherit; font-size: 14px;" href="#">Forgot password?</a>
+         <a id="forgot-ps-text" class="text-muted" href="#">Forgot password?</a>
         </small>
         </fieldset>
       </div>
