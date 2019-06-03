@@ -2,9 +2,13 @@ from django.contrib import admin
 from django.contrib.auth.decorators import login_required, permission_required
 from django.urls import path
 from . import views
+from .api import views as api_views
 
 app_name = 'main_app'
 urlpatterns = [
+    path('api/', api_views.SitesListCreateAPIView.as_view(), name='sites_rest_api'),
+    path('api/<uuid:post_id>/', view=api_views.SitesRetrieveUpdateDestroyAPIView.as_view(),
+            name='sites_rest_api'),
     path('', views.HomeTemplateView.as_view(), name='home'),
     path('sites', views.SitesListView.as_view(), name='viewsites'),
     path('sites/<int:pk>', views.SitesDetailView.as_view(), name='sitesdetail'),

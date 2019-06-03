@@ -27,7 +27,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
+# REST API DRF
 
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAdminUser',
+    ),
+}
 # Application definition
 
 INSTALLED_APPS = [

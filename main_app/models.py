@@ -1,3 +1,4 @@
+import uuid as uuid_lib
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
@@ -8,6 +9,10 @@ class Sites(models.Model):
 
     site_name = models.CharField(max_length=100)
     site_location = models.CharField(max_length=250)
+    uuid = models.UUIDField( #used by the API to look up the record
+                            db_index=True,
+                            default=uuid_lib.uuid4,
+                            editable=False)
     site_address = models.CharField(max_length=400, null=True)
     site_poc_name = models.CharField(max_length=100)
     site_poc_number = models.CharField(max_length=30)
