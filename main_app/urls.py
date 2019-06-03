@@ -6,9 +6,12 @@ from .api import views as api_views
 
 app_name = 'main_app'
 urlpatterns = [
-    path('api/', api_views.SitesListCreateAPIView.as_view(), name='sites_rest_api'),
-    path('api/<uuid:post_id>/', view=api_views.SitesRetrieveUpdateDestroyAPIView.as_view(),
+    path('api/sites/', api_views.SitesListCreateAPIView.as_view(), name='sites_rest_api'),
+    path('api/sites/<uuid>', view=api_views.SitesRetrieveUpdateDestroyAPIView.as_view(),
             name='sites_rest_api'),
+    path('api/devices/', api_views.DevicesListCreateAPIView.as_view(), name='devices_rest_api'),
+    path('api/devices/<uuid>', api_views.DevicesRetrieveUpdateDestroyAPIView.as_view(),
+            name='devices_rest_api'),
     path('', views.HomeTemplateView.as_view(), name='home'),
     path('sites', views.SitesListView.as_view(), name='viewsites'),
     path('sites/<int:pk>', views.SitesDetailView.as_view(), name='sitesdetail'),

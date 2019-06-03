@@ -30,6 +30,10 @@ class Devices(models.Model):
                                     )
     device_name = models.CharField(max_length=100)
     device_ip = models.GenericIPAddressField()
+    uuid = models.UUIDField( #used by the API to look up the record
+                            db_index=True,
+                            default=uuid_lib.uuid4,
+                            editable=False)
     vendor = models.CharField(choices=VENDOR_LIST, max_length=10,
                                                 default=VENDOR_LIST[0])
     site = models.ForeignKey(Sites,
