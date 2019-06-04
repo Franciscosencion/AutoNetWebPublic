@@ -1,4 +1,5 @@
 import os, datetime, re
+from multiprocessing import Pool
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'NetAutoMgmt.settings')
 import django
 django.setup()
@@ -7,10 +8,9 @@ from netmiko import ConnectHandler
 from netmiko.ssh_exception import (AuthenticationException,
                                     NetMikoTimeoutException)
 from paramiko.ssh_exception import SSHException
-from multiprocessing import Pool
-
-
+#custom modules
 from main_app.models import DeviceDetail, Devices
+
 
 _config = """
 This is a test config run using an automated script
@@ -57,17 +57,20 @@ def sync_config(device_ip, device_id):
             session.enable()
             config = session.send_command("show running-config")
             #device model
-            device_object = Devices.objects.get(id=device_id)
-            #find serial number & model
-            if device_object.vendor == "C":
-                # serial number goes here
-                inventory = session.send_command("show inventory")
-                serial_number_match = PatternFinder(r'SN.\s{0,}(9V.+)', inventory)
-                serial_number_match = serial_number_match.find_match()
-                # model goes here
-                #inventory = session.send_command("show inventory")
-                #serial_number_match = PatternFinder(r'SN.\s{0,}(FOC.+)', inventory)
-                #serial_number_match = serial_number_match.find_match()
+        device_object = Devices.objects.get(id=device_id)
+        #find serial number & model
+        if device_object.vendor == "C":
+            # serial number goes here
+            from .api_scripts import CiscoIOSXE
+            platform_detail = CiscoIOSXE(device_ip)
+            platform_defail = platform_detail.get_platform_detail()
+            # inventory = session.send_command("show inventory")
+            # serial_number_match = PatternFinder(r'SN.\s{0,}(9V.+)', inventory)
+            # serial_number_match = serial_number_match.find_match()
+            # model goes here
+            #inventory = session.send_command("show inventory")
+            #serial_number_match = PatternFinder(r'SN.\s{0,}(FOC.+)', inventory)
+            #serial_number_match = serial_number_match.find_match()
 
 
     except Exception as error:
@@ -92,7 +95,8 @@ def sync_config(device_ip, device_id):
         sync_conf = DeviceDetail.objects.filter(device_id_id=device_id).update(
                                 device_config=config,
                                 device_script="NA",
-                                device_sn = serial_number_match[0])
+                                device_model = platform_defail["model"],
+                                device_sn = platform_defail["serial_number"])
         #last_modify=datetime.datetime.now()
     else:
         # create new configuration record
@@ -100,7 +104,8 @@ def sync_config(device_ip, device_id):
                                 device_config=config,
                                 device_script="NA",
                                 device_id_id=device_id,
-                                device_sn = serial_number_match[0])[0]
+                                device_model = platform_defail["model"],
+                                device_sn = platform_defail["serial_number"])[0]
         #last_modify=datetime.datetime.now()
         sync_conf.save()
     return HttpResponse(status=201)
