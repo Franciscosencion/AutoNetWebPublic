@@ -5,6 +5,15 @@
 <div class="container shadow-sm p-3 mb-5 bg-white rounded">
   <h2>Device Details:</h2>
   <br>
+  <div class="edit-button-devices">
+    <a href="{% url 'main_app:updatedevice' pk=device_detail.id%}">
+      <button class="btn_class" id="btn-edit" type="submit">Edit</button>
+    </a>
+    <a href="{% url 'main_app:deletedevice' pk=device_detail.id%}">
+      <button class="btn_class" id="btn-delete" type="submit">Delete</button>
+    </a>
+  </div>
+
   <table class="table table-bordered">
     <thead  class="thead-dark">
       <th>Device Name</th>
@@ -26,11 +35,8 @@
     </tr>
   </table>
   <br>
-  <a href="{% url 'main_app:updatedevice' pk=device_detail.id%}">
-    <button class="btn btn-warning"type="submit">Edit</button>
-  </a>
-  <a href="{% url 'main_app:deletedevice' pk=device_detail.id%}">
-    <button class="btn btn-danger"type="submit">Delete</button>
-  </a>
+
+  <a href="{% url 'main_app:viewdevices'%}"><button class="btn_class" id="btn-back" type="button">Back</button></a>
+
 </div>
 {%endblock content %}

@@ -21,9 +21,9 @@
           </thead>
           {% for device in devices %}
           <tr>
-              <td><h4><a href="devices/{{device.id}}">{{device.device_name}}</a></h4></td>
-              <td><h4>{{device.device_ip}}</h4></td>
-              <td><h4><a href="sites/{{ device.site.id }}">{{device.site.site_name}}</a></h4></td>
+              <td><a href="devices/{{device.id}}">{{device.device_name}}</a></td>
+              <td>{{device.device_ip}}</td>
+              <td><a href="sites/{{ device.site.id }}">{{device.site.site_name}}</a></td>
           </tr>
           {%endfor%}
         </table>

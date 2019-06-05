@@ -16,9 +16,9 @@
             <th>Location</th>
           </thead>
           {% for site in sites %}
-          <tr>
-              <td><h4><a href="sites/{{ site.id }}">{{site.site_name}}</a></h4></td>
-              <td><h4>{{site.site_location}}</h4></td>
+          <tr >
+              <td><a href="sites/{{ site.id }}">{{site.site_name}}</a></td>
+              <td>{{site.site_location}}</td>
           </tr>
           {%endfor%}
         </table>

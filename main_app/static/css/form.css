@@ -14,7 +14,7 @@
 }
 
 .btn_class {
-  color: white;
+  color: black;
   padding: 5px 15px;
   margin: 0px 5px;
   border-radius: 4px;
@@ -27,7 +27,7 @@
   margin: 0px 5px;
   border: 1px solid #0f7fff;
   border-radius: 4px;
-  font-weight: bold;
+
 }
 
 #btn-cancel:hover {
@@ -39,9 +39,9 @@
   color: white;
   padding: 5px 15px;
   margin: 0px 5px;
-  border: 1px solid #2eaa20;
+  border: 1px solid #27911b;
   border-radius: 4px;
-  font-weight: bold;
+
 }
 
 #btn-save:hover {
@@ -49,33 +49,48 @@
 }
 
 #btn-delete {
-  background-color: #db0808;
+  background-color: #dc3545;
   color: white;
   padding: 5px 15px;
   margin: 0px 5px;
-  border: 1px solid #ff4444;
+  border: 1px solid #dc3545;
   border-radius: 4px;
-  font-weight: bold;
+
 
 }
 
 #btn-delete:hover {
-  background-color: #ad0000;
+  background-color: #a82633;
 }
 
 #btn-back {
-  background-color: #1979ff;
+  background-color: #007bff;
   color: white;
   padding: 5px 15px;
   margin: 0px 5px;
-  border: 1px solid #0f7fff;
+  border: 1px solid #007bff;
   border-radius: 4px;
-  font-weight: bold;
+
 
 }
 
 #btn-back:hover {
-  background-color: #185dff;
+  background-color: #005cbf;
+}
+
+#btn-edit {
+  background-color: #ffaa00;
+  color: white;
+  padding: 5px 15px;
+  margin: 0px 5px;
+  border: 1px solid #ffaa00;
+  border-radius: 4px;
+
+
+}
+
+#btn-edit:hover {
+  background-color: #c18100;
 }
 
 .mycustom-select {
@@ -94,4 +109,28 @@
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
+}
+
+.edit-button-devices {
+  padding: 10px 0px;
+
+}
+
+
+.custom_alert {
+    position: relative;
+    padding: .75rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+        border-top-color: transparent;
+        border-right-color: transparent;
+        border-bottom-color: transparent;
+        border-left-color: transparent;
+    border-radius: .25rem;
+}
+
+#custom_alert-error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
 }
