@@ -4,6 +4,9 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'NetAutoMgmt.settings')
 import django
 django.setup()
 from django.http import HttpResponse
+from django.utils import timezone
+from django.core.exceptions import ObjectDoesNotExist
+from django.shortcuts import get_object_or_404
 from netmiko import ConnectHandler
 from netmiko.ssh_exception import (AuthenticationException,
                                     NetMikoTimeoutException)
@@ -36,27 +39,28 @@ class PatternFinder:
             return(error)
 
 
-def sync_config(device_ip, device_id):
+def sync_config(device_ip, device_id, user):
 
     """
     sync_config will utilize netmiko API to connect to remote device and
     pull the configuration, after that using the values received ip and device
     id configuration will be either updated or created if it does not exist
     """
-    devicedict = {"device_type": "cisco_ios", "ip": device_ip,
-		          "username":"cisco", "password": "cisco", "secret": "cisco"}
+    # devicedict = {"device_type": "cisco_ios", "ip": device_ip,
+	# 	          "username":"cisco", "password": "cisco", "secret": "cisco"}
+    # try:
+    #
+    #     session = ConnectHandler(device_type=devicedict["device_type"],
+    # 							 ip=devicedict["ip"],
+    #                              username=devicedict["username"],
+    # 							 password=devicedict["password"],
+    # 							 secret=devicedict["secret"],
+    # 							 )
+    #     with session:
+    #         session.enable()
+    #         config = session.send_command("show running-config")
+    #         #device model
     try:
-
-        session = ConnectHandler(device_type=devicedict["device_type"],
-    							 ip=devicedict["ip"],
-                                 username=devicedict["username"],
-    							 password=devicedict["password"],
-    							 secret=devicedict["secret"],
-    							 )
-        with session:
-            session.enable()
-            config = session.send_command("show running-config")
-            #device model
         device_object = Devices.objects.get(id=device_id)
         #find serial number & model
         if device_object.vendor == "C":
@@ -64,6 +68,7 @@ def sync_config(device_ip, device_id):
             from .api_scripts import CiscoIOSXE
             platform_detail = CiscoIOSXE(device_ip)
             platform_defail = platform_detail.get_platform_detail()
+            running_config = platform_detail.get_running_config()
             # inventory = session.send_command("show inventory")
             # serial_number_match = PatternFinder(r'SN.\s{0,}(9V.+)', inventory)
             # serial_number_match = serial_number_match.find_match()
@@ -75,40 +80,35 @@ def sync_config(device_ip, device_id):
 
     except Exception as error:
         return None
-    # except NetMikoTimeoutException as error:
-    #     return HttpResponse("<h3>Connection timed out</h3>")
-    # except AuthenticationException as error:
-    #     return "Authentication failed. Try again."
-    # except SSHException as error:
-    #     return "Unable to connect via SSH. SSH enabled?"
-    record_exist = None
-    try:
-        record_exist = DeviceDetail.objects.get(device_id_id=device_id)
-    except Exception:
-        # if record does not exist variable record_exist will remain as None
-        # This will result in following statement returning False and new record
-        # being created.
-        pass
 
-    if record_exist:
+    try:
+        object = DeviceDetail.objects.get(device_id_id=device_id)
         # update record if configuration record exist
-        sync_conf = DeviceDetail.objects.filter(device_id_id=device_id).update(
-                                device_config=config,
+        DeviceDetail.objects.filter(device_id_id=device_id).update(
+                                device_config=running_config['running_config'],
                                 device_script="NA",
+                                modified_by = user,
+                                #last_modify = timezone.now(),
                                 device_model = platform_defail["model"],
                                 device_sn = platform_defail["serial_number"])
         #last_modify=datetime.datetime.now()
-    else:
-        # create new configuration record
+        return HttpResponse(status=202)
+    except ObjectDoesNotExist:
+        # New object will be created if ObjectDoesNotExist exception triggers
         sync_conf = DeviceDetail.objects.get_or_create(
-                                device_config=config,
+                                device_config=running_config['running_config'],
                                 device_script="NA",
+                                created_by = user,
+                                modified_by = user,
+                                last_modify = timezone.now(),
                                 device_id_id=device_id,
                                 device_model = platform_defail["model"],
                                 device_sn = platform_defail["serial_number"])[0]
-        #last_modify=datetime.datetime.now()
         sync_conf.save()
-    return HttpResponse(status=201)
+
+        return HttpResponse(status=201)
+    except Exception as error:
+        return HttpResponse(status=500)
 
 if __name__ == "__main__":
     print("Updating record")

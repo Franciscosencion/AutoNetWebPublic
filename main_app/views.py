@@ -130,8 +130,8 @@ class DeviceConfigDeleteView(LoginRequiredMixin, DeleteView):
 def sync_configuration(request, deviceip, deviceid):
     success_url = f'devices/{deviceid}'
     try:
-
-        script = sync_config(deviceip, deviceid)
+        user = request.user
+        script = sync_config(deviceip, deviceid, user)
         # return HttpResponse(f"<p1>{script}</p1>")
         if script:
             messages.add_message(
@@ -159,6 +159,7 @@ def device_search_function(request):
                     Query(device_ip__startswith=name) |
                     Query(device_ip__icontains=name)
                     )
+
     except Exception as error:
         return HttpResponse(error)
     return render(request, 'main_app/results.html', {'results':results})

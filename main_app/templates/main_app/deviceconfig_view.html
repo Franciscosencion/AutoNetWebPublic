@@ -3,17 +3,29 @@
 
 {%block content %}
   <div class="container shadow-sm p-3 mb-5 bg-white rounded">
-    <div>
-        <pre style="font-size: 12px; background-color: #e3e9ea; border-left: 4px solid #c2cfd1; color: #3b5456; padding: 18px; line-height: 18px; width: 100%;">
-          <div >
-            <code >{{deviceconfig.device_config}}</code>
-          </div>
+    <style>
+      pre {
+        border: 0px !important;
+      }
+      #config-container {
+        background-color: #eee !important;
+      }
+      li.L0, li.L1, li.L2, li.L3,
+      li.L5, li.L6, li.L7, li.L8 {
+        list-style-type: decimal !important;
+
+      }
+    </style>
+    <div id="config-container" style="overflow:scroll; height:600px;">
+
+        <pre class="prettyprint linenums Desert" >
+          {{deviceconfig.device_config}}
         </pre>
     </div>
     <br>
     <div >
-      <p class="text-right text-info"><em>Created on: {{deviceconfig.config_created}} UTC</em></p>
-      <p class="text-right text-success"><em>Last modified by {{User.createdby.created_by}}: {{deviceconfig.last_modify}} UTC</em></p>
+      <p class="text-right  text-muted"><em>Created on [{{deviceconfig.config_created}} UTC] by </em><strong>{{deviceconfig.created_by.username}}</strong></p>
+      <p class="text-right  text-muted"><em>Last modified on [{{deviceconfig.last_modify}} UTC] by </em><strong>{{deviceconfig.modified_by.username}}</strong></p>
     </div>
     <div>
       <a href="{% url 'main_app:devicedetail' pk=deviceconfig.pk%}"><button class="btn_class" id="btn-back" type="button">Back</button></a>

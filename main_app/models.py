@@ -2,8 +2,10 @@ import uuid as uuid_lib
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
+from django.conf import settings
 from django.contrib.auth.models import User
 # Create your models here.
+
 
 class Sites(models.Model):
 
@@ -52,10 +54,12 @@ class DeviceDetail (models.Model):
     device_sn = models.CharField(max_length=250, null=True)
     device_config = models.TextField(null=True)
     device_script = models.TextField(null=True)
-    created_by = models.ForeignKey("auth.User", related_name='createdby',
+    created_by = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='createdby',
+                                        on_delete=models.PROTECT, null=True)
+    modified_by = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='modifiedby',
                                         on_delete=models.PROTECT, null=True)
     config_created = models.DateTimeField(auto_now_add=True)
-    last_modify = models.DateTimeField(auto_now=True) #null=True
+    last_modify = models.DateTimeField(blank=True, null=True) #null=True
     device_id = models.OneToOneField(Devices, on_delete=models.CASCADE,
                                     related_name = 'config', primary_key=True)
 
