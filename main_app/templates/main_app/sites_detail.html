@@ -5,10 +5,10 @@
 <div class="container shadow-sm p-3 mb-5 bg-white rounded">
   <div class="float-right">
     <a href="{% url 'main_app:updatesite' pk=sites_detail.id%}">
-      <button class="btn btn-warning mr-1"type="submit">Edit</button>
+      <button class="btn-class" id="btn-edit" type="submit">Edit</button>
     </a>
     <a href="{% url 'main_app:deletesite' pk=sites_detail.id%}">
-      <button class="btn btn-danger"type="submit">Delete</button>
+      <button class="btn-class" id="btn-delete" type="submit">Delete</button>
     </a>
   </div>
   <h2>Site Details:</h2>

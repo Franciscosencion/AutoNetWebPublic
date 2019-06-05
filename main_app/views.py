@@ -3,6 +3,7 @@ from django.views.generic import (TemplateView, ListView, DetailView,
                                     CreateView, UpdateView, DeleteView)
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from requests.exceptions import ConnectionError
 from django.contrib import messages
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponse, HttpResponseRedirect, Http404
@@ -10,6 +11,7 @@ from django.db.models import Q as Query
 from . import models
 from .forms import SitesForm, DeviceForm
 from script.pullconfig_script import sync_config
+from script.api_scripts import AuthenticationError
 
 # Create your views here.
 
@@ -131,20 +133,26 @@ def sync_configuration(request, deviceip, deviceid):
     success_url = f'devices/{deviceid}'
     try:
         user = request.user
-        script = sync_config(deviceip, deviceid, user)
-        # return HttpResponse(f"<p1>{script}</p1>")
-        if script:
-            messages.add_message(
-                request, messages.SUCCESS, f'{deviceip} config sync done!')
-            return HttpResponseRedirect(reverse(f'main_app:devicedetail',
-                                            kwargs={'pk': deviceid}))
-        else:
-            messages.add_message(
-                request, messages.WARNING, 'Sync Failed')
-            return HttpResponseRedirect(reverse(f'main_app:devicedetail',
-                                            kwargs={'pk': deviceid}))
-    except Exception as error:
-        return HttpResponse(f"<p1>{error}</p1>")
+        sync_config(deviceip, deviceid, user)
+        messages.add_message(
+            request, messages.SUCCESS, f'Configuration has been synced')
+        return HttpResponseRedirect(reverse(f'main_app:devicedetail',
+                                        kwargs={'pk': deviceid}))
+    except ConnectionError:
+        messages.add_message(
+            request, messages.ERROR, f'IP {deviceip} unreachable')
+        return HttpResponseRedirect(reverse(f'main_app:devicedetail',
+                                        kwargs={'pk': deviceid}))
+    except AuthenticationError:
+        messages.add_message(
+            request, messages.ERROR, 'Invalid username and password')
+        return HttpResponseRedirect(reverse(f'main_app:devicedetail',
+                                        kwargs={'pk': deviceid}))
+    except Exception:
+        messages.add_message(
+            request, messages.WARNING, 'Unknown error has occurred')
+        return HttpResponseRedirect(reverse(f'main_app:devicedetail',
+                                        kwargs={'pk': deviceid}))
 
 
 @login_required

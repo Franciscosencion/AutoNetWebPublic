@@ -32,6 +32,8 @@ class Devices(models.Model):
                                     )
     device_name = models.CharField(max_length=100)
     device_ip = models.GenericIPAddressField()
+    device_model = models.CharField(max_length=100, null=True, blank=True)
+    device_sn = models.CharField(max_length=250, null=True, blank=True)
     uuid = models.UUIDField( #used by the API to look up the record
                             db_index=True,
                             default=uuid_lib.uuid4,
@@ -50,13 +52,12 @@ class Devices(models.Model):
         return reverse('main_app:devicedetail', kwargs={'pk': self.pk})
 
 class DeviceDetail (models.Model):
-    device_model = models.CharField(max_length=100, null=True)
-    device_sn = models.CharField(max_length=250, null=True)
+
     device_config = models.TextField(null=True)
     device_script = models.TextField(null=True)
-    created_by = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='createdby',
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='createdby',
                                         on_delete=models.PROTECT, null=True)
-    modified_by = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='modifiedby',
+    modified_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='modifiedby',
                                         on_delete=models.PROTECT, null=True)
     config_created = models.DateTimeField(auto_now_add=True)
     last_modify = models.DateTimeField(blank=True, null=True) #null=True

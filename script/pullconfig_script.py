@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
+from requests.exceptions import ConnectionError
 from netmiko import ConnectHandler
 from netmiko.ssh_exception import (AuthenticationException,
                                     NetMikoTimeoutException)
@@ -67,30 +68,20 @@ def sync_config(device_ip, device_id, user):
             # serial number goes here
             from .api_scripts import CiscoIOSXE
             platform_detail = CiscoIOSXE(device_ip)
-            platform_defail = platform_detail.get_platform_detail()
-            running_config = platform_detail.get_running_config()
-            # inventory = session.send_command("show inventory")
-            # serial_number_match = PatternFinder(r'SN.\s{0,}(9V.+)', inventory)
-            # serial_number_match = serial_number_match.find_match()
-            # model goes here
-            #inventory = session.send_command("show inventory")
-            #serial_number_match = PatternFinder(r'SN.\s{0,}(FOC.+)', inventory)
-            #serial_number_match = serial_number_match.find_match()
 
-
-    except Exception as error:
-        return None
-
-    try:
+        platform_defail = platform_detail.get_platform_detail()
+        running_config = platform_detail.get_running_config()
         object = DeviceDetail.objects.get(device_id_id=device_id)
         # update record if configuration record exist
         DeviceDetail.objects.filter(device_id_id=device_id).update(
                                 device_config=running_config['running_config'],
                                 device_script="NA",
                                 modified_by = user,
-                                #last_modify = timezone.now(),
-                                device_model = platform_defail["model"],
-                                device_sn = platform_defail["serial_number"])
+                                last_modify = timezone.now())
+
+        Devices.objects.filter(id=device_id).update(
+                                device_model=platform_defail["model"],
+                                device_sn=platform_defail["serial_number"])
         #last_modify=datetime.datetime.now()
         return HttpResponse(status=202)
     except ObjectDoesNotExist:
@@ -100,15 +91,20 @@ def sync_config(device_ip, device_id, user):
                                 device_script="NA",
                                 created_by = user,
                                 modified_by = user,
-                                last_modify = timezone.now(),
-                                device_id_id=device_id,
-                                device_model = platform_defail["model"],
-                                device_sn = platform_defail["serial_number"])[0]
+                                device_id_id=device_id)[0]
         sync_conf.save()
+        Devices.objects.filter(id=device_id).update(
+                                device_model=platform_defail["model"],
+                                device_sn=platform_defail["serial_number"])
+
+
 
         return HttpResponse(status=201)
-    except Exception as error:
-        return HttpResponse(status=500)
+    except UnboundLocalError as error:
+        raise error
+    except ConnectionError as error:
+        raise error
+
 
 if __name__ == "__main__":
     print("Updating record")

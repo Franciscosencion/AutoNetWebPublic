@@ -7,8 +7,8 @@
     {% csrf_token %}
     <br>
     <p>Are you sure you want to delete {{site.site_name}}?</p>
-    <a href="{% url 'main_app:sitesdetail' pk=site.id%}"><input class="btn btn-primary" type="button" value="Cancel"></a>
-    <input class="btn btn-danger" type="submit" value="Delete">
+    <a href="{% url 'main_app:sitesdetail' pk=site.id%}"><input class="btn-class" id="btn-cancel" type="button" value="Cancel"></a>
+    <input class="btn-class" id="btn-delete" type="submit" value="Delete">
 
   </form>
 </div>

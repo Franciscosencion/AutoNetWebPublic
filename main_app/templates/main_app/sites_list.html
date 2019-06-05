@@ -5,7 +5,7 @@
   <div class="container shadow-sm p-3 mb-5 bg-white rounded">
     <div class="container">
       <a href="{% url 'main_app:createsite' %}">
-        <input class="btn btn-success  float-right" type="submit" value="Create">
+        <input class="btn-class float-right" id="btn-save" type="submit" value="Create">
       </a>
     </div>
     <div class="">
@@ -16,9 +16,9 @@
             <th>Location</th>
           </thead>
           {% for site in sites %}
-          <tr>
-              <td><h4><a href="sites/{{ site.id }}">{{site.site_name}}</a></h4></td>
-              <td><h4>{{site.site_location}}</h4></td>
+          <tr >
+              <td><a href="sites/{{ site.id }}">{{site.site_name}}</a></td>
+              <td>{{site.site_location}}</td>
           </tr>
           {%endfor%}
         </table>

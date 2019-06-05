@@ -10,22 +10,25 @@
       #config-container {
         background-color: #eee !important;
       }
+
       li.L0, li.L1, li.L2, li.L3,
       li.L5, li.L6, li.L7, li.L8 {
         list-style-type: decimal !important;
 
       }
     </style>
-    <div id="config-container" style="overflow:scroll; height:600px;">
+    <div id="config-container" >
 
-        <pre class="prettyprint linenums Desert" >
+        <pre id="code-lines" class="prettyprint linenums Desert" style="overflow:scroll; height:600px;">
           {{deviceconfig.device_config}}
         </pre>
     </div>
     <br>
     <div >
       <p class="text-right  text-muted"><em>Created on [{{deviceconfig.config_created}} UTC] by </em><strong>{{deviceconfig.created_by.username}}</strong></p>
+      {%if deviceconfig.last_modify%}
       <p class="text-right  text-muted"><em>Last modified on [{{deviceconfig.last_modify}} UTC] by </em><strong>{{deviceconfig.modified_by.username}}</strong></p>
+      {%endif%}
     </div>
     <div>
       <a href="{% url 'main_app:devicedetail' pk=deviceconfig.pk%}"><button class="btn_class" id="btn-back" type="button">Back</button></a>
