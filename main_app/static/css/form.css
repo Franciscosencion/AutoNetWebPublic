@@ -93,6 +93,17 @@
   background-color: #c18100;
 }
 
+#btn-sync {
+  line-height: 0;
+  background-color: white;
+  color: #075e19;
+  border: 2px solid #0d9b2a;
+  border-radius: 5px;
+  padding: 2px 5px;
+}
+#btn-sync:hover {
+  background-color: #0d9b2a;
+}
 .mycustom-select {
   display: inline-block;
   width: 100%;
