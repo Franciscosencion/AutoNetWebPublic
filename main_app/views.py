@@ -133,8 +133,6 @@ def sync_configuration(request, deviceip, deviceid):
     success_url = f'devices/{deviceid}'
     try:
         user = request.user
-        print(user.password)
-
         sync_config(deviceip, deviceid, user)
         messages.add_message(
             request, messages.SUCCESS, f'Configuration has been synced')
@@ -142,7 +140,7 @@ def sync_configuration(request, deviceip, deviceid):
                                         kwargs={'pk': deviceid}))
     except ConnectionError:
         messages.add_message(
-            request, messages.WARNING, 'Unable to connect to device')
+            request, messages.ERROR, f'IP {deviceip} unreachable')
         return HttpResponseRedirect(reverse(f'main_app:devicedetail',
                                         kwargs={'pk': deviceid}))
     except AuthenticationError:
