@@ -1,4 +1,3 @@
-
 .textinputclass {
   width: 100%;
   padding: 12px 20px;
@@ -140,8 +139,20 @@
     border-radius: .25rem;
 }
 
-#custom_alert-error {
+#custom_alert_error {
     color: #721c24;
     background-color: #f8d7da;
     border-color: #f5c6cb;
+}
+
+#custom_alert_warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+
+#custom_alert_success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
 }
