@@ -41,7 +41,7 @@
     </thead>
     {% for device in sites_detail.devices.all %}
       <tr>
-        <td><a href="{% url 'main_app:devicedetail' pk=device.id%}"><strong>{{device.device_name}}</strong></a></td>
+        <td><a href="{% url 'main_app:devicedetail' pk=device.id%}">{{device.device_name}}</a></td>
         <td>{{device.device_ip}}</td>
       </tr>
     {% endfor %}
