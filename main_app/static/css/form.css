@@ -134,3 +134,69 @@
     background-color: #f8d7da;
     border-color: #f5c6cb;
 }
+
+/* css for device & sites tables */
+
+#device-table1 {
+  display: block;
+}
+.ctable {
+background-color: #fff;
+box-shadow: 0 1px 4px 0 rgba(0,0,0,0.3);
+border-collapse: collapse;
+font-family: Helvetica,Verdana,sans-serif;
+font-weight: 300;
+width: 100%;
+font-size: 12px;
+background-clip: padding-box;
+color:
+}
+
+thead {
+  font-size: 20px;
+}
+.ctable tbody tr {
+background-color: #fbfbfb;
+transition: .3s;
+border-bottom: 1px solid #eee;
+}
+
+.ctable tbody tr:nth-child(2n+1) {
+  background-color: #fbfbfb;
+}
+
+.ctable tbody td {
+padding: 14px 18px;
+text-align: left;
+}
+
+.ctable  thead .layout td {
+    font-weight: 300;
+    text-align: left;
+    color: #757575;
+    padding: 12px;
+    border-bottom: 1px solid #ccc;
+  }
+.ctable-noSideBorder tbody td:first-child {
+border-left: 0 !important;
+}
+
+.ctable-noSideBorder  thead .layout td {
+    border-top: 0;
+    border-left: 0;
+}
+.ctable tbody td {
+padding: 14px 18px;
+text-align: left;
+}
+
+
+.ctable tbody tr:nth-child {
+    background-color: #fbfbfb;
+}
+
+
+.ctable tbody  tr {
+    transition: .3s;
+    border-bottom: 1px solid #eee;
+}
