@@ -2,7 +2,7 @@
 
 
 {%block content %}
-<div class="container shadow-sm p-3 mb-5 bg-white rounded">
+<div class="" style="width: 90%; margin-left: auto; margin-right: auto;">
   <h2>Device Details:</h2>
   <br>
   <div class="edit-button-devices">
@@ -14,29 +14,33 @@
     </a>
   </div>
 
-  <table class="table table-bordered">
-    <thead  class="thead-dark">
-      <th>Device Name</th>
-      <th>IP</th>
-      <th>Model</th>
-      <th>Serial Number</th>
-      <th>Site</th>
-      <th>Config</th>
-      <th>Script</th>
-    </thead>
-    <tr>
-      <td>{{device_detail.device_name}}</td>
-      <td>{{device_detail.device_ip}}</td>
-      <td>{{device_detail.device_model}}</td>
-      <td>{{device_detail.device_sn}}</td>
-      <td>{{device_detail.site.site_name}}</td>
-      <td><a href="config/{{device_detail.id}}" style="padding:20px">Config</a><a href="{{device_detail.device_ip}}&{{device_detail.id}}"><button type="button" class="btn-class" id="btn-sync"><i class="material-icons">sync</i></button></a></td>
-      <td><a href="script/{{device_detail.id}}" style="padding:20px">Script</a><button type="button" class="btn-class" id="btn-sync"><i class="material-icons">sync</i></button></td>
-    </tr>
-  </table>
-  <br>
+    <table id="device-table1">
+      <table class="ctable ctable-noSideBorder">
+        <thead  class="layout">
+          <th>Device Name</th>
+          <th>IP</th>
+          <th>Model</th>
+          <th>Serial Number</th>
+          <th>Site</th>
+          <th>Config</th>
+          <th>Script</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{device_detail.device_name}}</td>
+            <td>{{device_detail.device_ip}}</td>
+            <td>{{device_detail.device_model}}</td>
+            <td>{{device_detail.device_sn}}</td>
+            <td>{{device_detail.site.site_name}}</td>
+            <td><a href="config/{{device_detail.id}}" style="padding:20px">Config</a><a href="{{device_detail.device_ip}}&{{device_detail.id}}"><button type="button" class="btn-class" id="btn-sync"><i class="material-icons">sync</i></button></a></td>
+            <td><a href="script/{{device_detail.id}}" style="padding:20px">Script</a><button type="button" class="btn-class" id="btn-sync"><i class="material-icons">sync</i></button></td>
+          </tr>
+        </tbody>
 
-  <a href="{% url 'main_app:viewdevices'%}"><button class="btn_class" id="btn-back" type="button">Back</button></a>
+      </table>
+    </table>
+    <br>
+    <a href="{% url 'main_app:viewdevices'%}"><button class="btn_class" id="btn-back" type="button">Back</button></a>
+  </div>
 
-</div>
 {%endblock content %}

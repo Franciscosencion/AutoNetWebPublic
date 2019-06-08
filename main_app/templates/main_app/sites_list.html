@@ -2,27 +2,29 @@
 
 
 {%block content %}
-  <div class="container shadow-sm p-3 mb-5 bg-white rounded">
-    <div class="container">
+  <div class="" style="width: 90%; margin-left: auto; margin-right: auto;">
       <a href="{% url 'main_app:createsite' %}">
         <input class="btn-class float-right" id="btn-save" type="submit" value="Create">
       </a>
-    </div>
-    <div class="">
-      <h1><strong>Sites:</strong></h1>
-        <table class="table table-bordered">
-          <thead class="thead-dark">
+      <table id="device-table1">
+        <table class="ctable ctable-noSideBorder">
+          <thead class="layout">
             <th>Site Name</th>
             <th>Location</th>
+            <th>Point of Contact</th>
           </thead>
-          {% for site in sites %}
-          <tr >
-              <td><a href="sites/{{ site.id }}">{{site.site_name}}</a></td>
-              <td>{{site.site_location}}</td>
-          </tr>
-          {%endfor%}
+          <tbody>
+            {% for site in sites %}
+            <tr >
+                <td><a href="sites/{{ site.id }}">{{site.site_name}}</a></td>
+                <td>{{site.site_location}}</td>
+                <td>{{site.site_poc_name}}</td>
+            </tr>
+            {%endfor%}
+          </tbody>
         </table>
-      </div>
+      </table>
+
       {% if is_paginated %}
         {% if page_obj.has_previous %}
           <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
