@@ -8,6 +8,9 @@ from django.contrib import messages
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.db.models import Q as Query
+from netmiko.ssh_exception import (AuthenticationException,
+                                    NetMikoTimeoutException)
+from paramiko.ssh_exception import SSHException
 from . import models
 from .forms import SitesForm, DeviceForm
 from script.pullconfig_script import sync_config
@@ -148,9 +151,24 @@ def sync_configuration(request, deviceip, deviceid):
             request, messages.ERROR, 'Invalid username and password')
         return HttpResponseRedirect(reverse(f'main_app:devicedetail',
                                         kwargs={'pk': deviceid}))
-    except Exception:
+    except AuthenticationException:
         messages.add_message(
-            request, messages.WARNING, 'Unknown error has occurred')
+            request, messages.ERROR, 'Invalid username and password')
+        return HttpResponseRedirect(reverse(f'main_app:devicedetail',
+                                        kwargs={'pk': deviceid}))
+    except NetMikoTimeoutException:
+        messages.add_message(
+            request, messages.ERROR, 'Connection request timeout')
+        return HttpResponseRedirect(reverse(f'main_app:devicedetail',
+                                        kwargs={'pk': deviceid}))
+    except SSHException:
+        messages.add_message(
+            request, messages.ERROR, 'Unable to establish SSH session, SSH enabled?')
+        return HttpResponseRedirect(reverse(f'main_app:devicedetail',
+                                        kwargs={'pk': deviceid}))
+    except Exception as error:
+        messages.add_message(
+            request, messages.WARNING, f'Unknown error has occurred: {error}')
         return HttpResponseRedirect(reverse(f'main_app:devicedetail',
                                         kwargs={'pk': deviceid}))
 

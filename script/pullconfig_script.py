@@ -8,10 +8,6 @@ from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
 from requests.exceptions import ConnectionError
-from netmiko import ConnectHandler
-from netmiko.ssh_exception import (AuthenticationException,
-                                    NetMikoTimeoutException)
-from paramiko.ssh_exception import SSHException
 #custom modules
 from main_app.models import DeviceDetail, Devices
 
@@ -47,55 +43,47 @@ def sync_config(device_ip, device_id, user):
     pull the configuration, after that using the values received ip and device
     id configuration will be either updated or created if it does not exist
     """
-    # devicedict = {"device_type": "cisco_ios", "ip": device_ip,
-	# 	          "username":"cisco", "password": "cisco", "secret": "cisco"}
-    # try:
-    #
-    #     session = ConnectHandler(device_type=devicedict["device_type"],
-    # 							 ip=devicedict["ip"],
-    #                              username=devicedict["username"],
-    # 							 password=devicedict["password"],
-    # 							 secret=devicedict["secret"],
-    # 							 )
-    #     with session:
-    #         session.enable()
-    #         config = session.send_command("show running-config")
-    #         #device model
+
     try:
         device_object = Devices.objects.get(id=device_id)
         #find serial number & model
         if device_object.vendor == "C":
             # serial number goes here
-            from .api_scripts import CiscoIOSXE
+            from .api_scripts import (CiscoIOSXE)
             platform_detail = CiscoIOSXE(device_ip)
 
-        platform_defail = platform_detail.get_platform_detail()
-        running_config = platform_detail.get_running_config()
+        device_detail = platform_detail.get_platform_detail()
+        #get constructed config through RESTCONF
+        #running_config = platform_detail.get_running_config()
+        #get unconstructed config through Netmiko
+        unconstructed_config = platform_detail.get_running_config_unstructured()
         object = DeviceDetail.objects.get(device_id_id=device_id)
         # update record if configuration record exist
         DeviceDetail.objects.filter(device_id_id=device_id).update(
-                                device_config=running_config['running_config'],
+                                device_config=unconstructed_config[
+                                'unconstructed_config'],
                                 device_script="NA",
                                 modified_by = user,
                                 last_modify = timezone.now())
 
         Devices.objects.filter(id=device_id).update(
-                                device_model=platform_defail["model"],
-                                device_sn=platform_defail["serial_number"])
+                                device_model=device_detail["model"],
+                                device_sn=device_detail["serial_number"])
         #last_modify=datetime.datetime.now()
         return HttpResponse(status=202)
     except ObjectDoesNotExist:
         # New object will be created if ObjectDoesNotExist exception triggers
         sync_conf = DeviceDetail.objects.get_or_create(
-                                device_config=running_config['running_config'],
+                                device_config=unconstructed_config[
+                                'unconstructed_config'],
                                 device_script="NA",
                                 created_by = user,
                                 modified_by = user,
                                 device_id_id=device_id)[0]
         sync_conf.save()
         Devices.objects.filter(id=device_id).update(
-                                device_model=platform_defail["model"],
-                                device_sn=platform_defail["serial_number"])
+                                device_model=device_detail["model"],
+                                device_sn=device_detail["serial_number"])
 
 
 
