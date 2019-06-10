@@ -26,10 +26,8 @@ class Sites(models.Model):
         return reverse('main_app:sitesdetail', kwargs={'pk': self.pk})
 
 class Devices(models.Model):
-    VENDOR_LIST = (('C', 'Cisco'),
-                                    ('J', 'Juniper'),
-                                    ('A', 'Arista'),
-                                    )
+    VENDOR_LIST = (('C', 'Cisco'), ('J', 'Juniper'), ('A', 'Arista'))
+    DEVICE_TYPES = (('R', 'Router'), ('S', 'Switch'), ('F', 'Firewall'))
     device_name = models.CharField(max_length=100)
     device_ip = models.GenericIPAddressField()
     device_model = models.CharField(max_length=100, null=True, blank=True)
@@ -40,6 +38,8 @@ class Devices(models.Model):
                             editable=False)
     vendor = models.CharField(choices=VENDOR_LIST, max_length=10,
                                                 default=VENDOR_LIST[0])
+    device_type = models.CharField(choices=DEVICE_TYPES, max_length=10,
+                                                default=DEVICE_TYPES[0])
     site = models.ForeignKey(Sites,
                             on_delete=models.CASCADE,
                             related_name = 'devices',

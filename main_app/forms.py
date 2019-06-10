@@ -30,10 +30,10 @@ class DeviceForm(forms.ModelForm):
     this form class will be used to customize the form widgets based on custom
     css stylesheet
     """
-    
+
     class Meta():
         model = Devices
-        fields = ('device_name', 'device_ip', 'vendor',
+        fields = ('device_name', 'device_ip', 'vendor', 'device_type',
                     'site')
         widgets = {
                     'device_name': forms.TextInput(attrs={
@@ -42,6 +42,8 @@ class DeviceForm(forms.ModelForm):
                     'class':'textinputclass', 'placeholder': 'IP Address'}),
                     'vendor':forms.Select(attrs={
                     'class':'mycustom-select', 'id':'vendor-select'}),
+                    'device_type':forms.Select(attrs={
+                    'class':'mycustom-select', 'id':'device-type-select'}),
                     'site':forms.Select(attrs={
                     'class':'mycustom-select', 'id':'site-select'}),
         }
