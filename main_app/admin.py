@@ -5,3 +5,5 @@ from . import models
 admin.site.register(models.Sites)
 admin.site.register(models.Devices)
 admin.site.register(models.DeviceDetail)
+admin.site.register(models.DeviceInterfaces)
+admin.site.register(models.DeviceVlans)

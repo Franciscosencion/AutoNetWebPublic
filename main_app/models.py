@@ -25,6 +25,7 @@ class Sites(models.Model):
     def get_absolute_url(self):
         return reverse('main_app:sitesdetail', kwargs={'pk': self.pk})
 
+
 class Devices(models.Model):
     VENDOR_LIST = (('C', 'Cisco'), ('J', 'Juniper'), ('A', 'Arista'))
     DEVICE_TYPES = (('R', 'Router'), ('S', 'Switch'), ('F', 'Firewall'))
@@ -55,6 +56,7 @@ class Devices(models.Model):
     def get_absolute_url(self):
         return reverse('main_app:devicedetail', kwargs={'pk': self.pk})
 
+
 class DeviceDetail (models.Model):
 
     device_config = models.TextField(null=True)
@@ -70,3 +72,31 @@ class DeviceDetail (models.Model):
 
     def __str__(self):
         return self.device_id.device_name
+
+
+class DeviceInterfaces(models.Model):
+    """
+    Model for device interfaces
+    """
+    interfaces = models.CharField(max_length=100, null=True, blank=True)
+    device = models.ForeignKey(Devices, related_name='interfaces',
+                                        on_delete=models.CASCADE,
+                                        null=True,
+                                        blank=True)
+    def __str__(self):
+        return self.device.device_name
+
+
+class DeviceVlans(models.Model):
+    """
+    Model for device vlans
+    """
+    vlan_name = models.CharField(max_length=200, null=True, blank=True)
+    vlan_id = models.IntegerField(null=True, blank=True)
+    device = models.ForeignKey(Devices, related_name='vlans',
+                                        on_delete=models.CASCADE,
+                                        null=True,
+                                        blank=True)
+
+    def __str__(self):
+        return self.device.device_name
