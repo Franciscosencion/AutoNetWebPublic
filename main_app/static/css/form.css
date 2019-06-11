@@ -255,3 +255,7 @@
   color: #757575;
   font-weight: bold;
 }
+
+.modal-body {
+    max-height: 800px;
+}
