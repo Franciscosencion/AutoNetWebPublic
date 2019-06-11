@@ -52,7 +52,7 @@ class CiscoIOSXE:
         except AuthenticationError as error:
             raise error
 
-    def get_running_config_structured(self):
+    def get_running_config(self):
 
         running_config_url = self.restconf_base + "/Cisco-IOS-XE-native:native"
         url = running_config_url.format(ip=self.ip, port='443')
@@ -73,24 +73,43 @@ class CiscoIOSXE:
         except AuthenticationError as error:
             raise error
 
-    def get_running_config_unstructured(self):
+
+
+class CiscoIOS:
+
+    def __init__(self, ip, task, username='cisco', password='cisco'):
+        self.ip = ip
+        self.username = username
+        self.password = password
+
+    def main_session(self):
+        """
+        Method callable to establish the SSH session
+        """
+        cisco_ios_parameters = {"device_type": "cisco_ios",
+                                "ip": self.ip,
+            		            "username":self.user,
+                                "password": self.password,
+                                "secret": self.password}
+
+        session = ConnectHandler(**cisco_ios_parameters)
+
+    def get_platform_detail(self):
+        """
+        Method used to pull device platform details such serial number and model
+        """
+
+    def get_running_config(self):
         """
         This method is used to retrieve unstructured running configuration
         """
-
         try:
-            cisco_ios_parameters = {"device_type": "cisco_ios",
-                                    "ip": self.ip,
-                		            "username":self.user,
-                                    "password": self.password,
-                                    "secret": self.password}
-
-            session = ConnectHandler(**cisco_ios_parameters)
+            session = main_session()
 
             with session:
                 session.enable()
                 running_config = session.send_command("show running-config")
-            config = {"unconstructed_config": running_config}
+            config = {"running_config": running_config}
             return config
         except AuthenticationException as error:
             #this will raise authentication error when wrong credentials are

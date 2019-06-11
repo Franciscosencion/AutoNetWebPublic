@@ -2,38 +2,50 @@
 
 
 {%block content %}
-<div class="" style="width: 90%; margin-left: auto; margin-right: auto;">
+<div class="" style="width: 50%; margin-left: auto; margin-right: auto;">
   <h2>Device Details:</h2>
-  <br>
-  <div class="edit-button-devices">
-    <a href="{% url 'main_app:updatedevice' pk=device_detail.id%}">
-      <button class="btn_class" id="btn-edit" type="submit">Edit</button>
-    </a>
-    <a href="{% url 'main_app:deletedevice' pk=device_detail.id%}">
-      <button class="btn_class" id="btn-delete" type="submit">Delete</button>
-    </a>
-  </div>
-
+    <div >
+      <a class="mycustom-select float-right" id="task-dropdown"role="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Tasks
+      </a>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+        {%if device_detail.device_type == 'S'%}
+          <a class="dropdown-item" href="#">VLAN Change</a>
+        {%elif device_detail.device_type == 'R'%}
+          <a class="dropdown-item" href="#">Run Script</a>
+        {%endif%}
+      </div>
+    </div>
     <table id="device-table1">
       <table class="ctable ctable-noSideBorder">
-        <thead  class="layout">
-          <th>Device Name</th>
-          <th>IP</th>
-          <th>Model</th>
-          <th>Serial Number</th>
-          <th>Site</th>
-          <th>Config</th>
-          <th>Script</th>
-        </thead>
         <tbody>
           <tr>
+            <td style="font-weight: bold;">Device Name:</td>
             <td>{{device_detail.device_name}}</td>
+          </tr>
+          <tr>
+            <td style="font-weight: bold;">IP Address: </td>
             <td>{{device_detail.device_ip}}</td>
+          </tr>
+          <tr>
+            <td style="font-weight: bold;">Model:</td>
             <td>{{device_detail.device_model}}</td>
+          </tr>
+          <tr>
+            <td style="font-weight: bold;">Serial Number: </td>
             <td>{{device_detail.device_sn}}</td>
+          </tr>
+          <tr>
+            <td style="font-weight: bold;">Location: </td>
             <td>{{device_detail.site.site_name}}</td>
-            <td><a href="config/{{device_detail.id}}" style="padding:20px">Config</a><a href="{{device_detail.device_ip}}&{{device_detail.id}}"><button type="button" class="btn-class" id="btn-sync"><i class="material-icons">sync</i></button></a></td>
-            <td><a href="script/{{device_detail.id}}" style="padding:20px">Script</a><button type="button" class="btn-class" id="btn-sync"><i class="material-icons">sync</i></button></td>
+          </tr>
+          <tr>
+            <td style="font-weight: bold;">Configuration: </td>
+            <td>
+              <a href="config/{{device_detail.id}}" >View</a>
+              <a href="{{device_detail.device_ip}}&{{device_detail.id}}"><button type="button" class="btn-class" id="btn-sync" style="margin-left: 10px;"><i class="material-icons">sync</i></button></a>
+            </td>
+
           </tr>
         </tbody>
 
@@ -41,6 +53,12 @@
     </table>
     <br>
     <a href="{% url 'main_app:viewdevices'%}"><button class="btn_class" id="btn-back" type="button">Back</button></a>
+    <a href="{% url 'main_app:updatedevice' pk=device_detail.id%}">
+      <button class="btn_class" id="btn-edit" type="submit">Edit</button>
+    </a>
+    <a href="{% url 'main_app:deletedevice' pk=device_detail.id%}">
+      <button class="btn_class" id="btn-delete" type="submit">Delete</button>
+    </a>
   </div>
 
 {%endblock content %}

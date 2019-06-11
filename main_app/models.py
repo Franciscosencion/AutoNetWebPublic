@@ -28,6 +28,8 @@ class Sites(models.Model):
 class Devices(models.Model):
     VENDOR_LIST = (('C', 'Cisco'), ('J', 'Juniper'), ('A', 'Arista'))
     DEVICE_TYPES = (('R', 'Router'), ('S', 'Switch'), ('F', 'Firewall'))
+    CISCO_OS = (('1', 'CISCO IOS'), ('2', 'CISCO IOS-XE'),
+                ('3', 'CISCO IOS-XR'), ('4', 'CISCO NX-OS'))
     device_name = models.CharField(max_length=100)
     device_ip = models.GenericIPAddressField()
     device_model = models.CharField(max_length=100, null=True, blank=True)
@@ -40,6 +42,8 @@ class Devices(models.Model):
                                                 default=VENDOR_LIST[0])
     device_type = models.CharField(choices=DEVICE_TYPES, max_length=10,
                                                 default=DEVICE_TYPES[0])
+    operating_system = models.CharField(choices=CISCO_OS, max_length=10,
+                                                default=CISCO_OS)
     site = models.ForeignKey(Sites,
                             on_delete=models.CASCADE,
                             related_name = 'devices',

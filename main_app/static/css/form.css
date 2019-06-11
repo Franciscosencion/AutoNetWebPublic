@@ -142,6 +142,20 @@
     border-radius: .25rem;
 }
 
+#task-dropdown {
+  width: 15%;
+  margin-bottom: 10px;
+  background-color: #fff;
+  border: 1px solid #2ea542;
+  text-align: center;
+  color: black;
+}
+
+#task-dropdown:hover {
+  background-color: #2ea542;
+  color: white;
+}
+
 #custom_alert_error {
     color: #721c24;
     background-color: #f8d7da;

@@ -48,20 +48,32 @@ def sync_config(device_ip, device_id, user):
         device_object = Devices.objects.get(id=device_id)
         #find serial number & model
         if device_object.vendor == "C":
-            # serial number goes here
-            from .api_scripts import (CiscoIOSXE)
-            platform_detail = CiscoIOSXE(device_ip)
+            if device_object.operating_system == '1':
+                #operating system 1 is Cisco IOS
+                from .api_scripts import (CiscoIOS)
+                platform_detail =CiscoIOS(device_ip)
+                pass
+            elif device_object.operating_system == '2':
+                #Cisco IOS-XE
+                from .api_scripts import (CiscoIOSXE)
+                platform_detail = CiscoIOSXE(device_ip)
+            elif device_object.operating_system == '3':
+                # Cisco IOS-XR
+                pass
+            elif device_object.operating_system == '4':
+                # Cisco NX-OS
+                pass
 
         device_detail = platform_detail.get_platform_detail()
         #get constructed config through RESTCONF
         #running_config = platform_detail.get_running_config()
         #get unconstructed config through Netmiko
-        unconstructed_config = platform_detail.get_running_config_unstructured()
+        device_config = platform_detail.get_running_config()
         object = DeviceDetail.objects.get(device_id_id=device_id)
         # update record if configuration record exist
         DeviceDetail.objects.filter(device_id_id=device_id).update(
-                                device_config=unconstructed_config[
-                                'unconstructed_config'],
+                                device_config=device_config[
+                                'running_config'],
                                 device_script="NA",
                                 modified_by = user,
                                 last_modify = timezone.now())
