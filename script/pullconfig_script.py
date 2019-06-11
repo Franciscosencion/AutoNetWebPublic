@@ -86,8 +86,8 @@ def sync_config(device_ip, device_id, user):
     except ObjectDoesNotExist:
         # New object will be created if ObjectDoesNotExist exception triggers
         sync_conf = DeviceDetail.objects.get_or_create(
-                                device_config=unconstructed_config[
-                                'unconstructed_config'],
+                                device_config=device_config[
+                                'running_config'],
                                 device_script="NA",
                                 created_by = user,
                                 modified_by = user,

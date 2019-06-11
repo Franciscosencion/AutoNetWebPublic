@@ -76,8 +76,8 @@ class CiscoIOSXE:
 
 
 class CiscoIOS:
-
-    def __init__(self, ip, task, username='cisco', password='cisco'):
+    import re
+    def __init__(self, ip, task=None, username='cisco', password='cisco'):
         self.ip = ip
         self.username = username
         self.password = password
@@ -88,23 +88,50 @@ class CiscoIOS:
         """
         cisco_ios_parameters = {"device_type": "cisco_ios",
                                 "ip": self.ip,
-            		            "username":self.user,
+            		            "username":self.username,
                                 "password": self.password,
                                 "secret": self.password}
 
-        session = ConnectHandler(**cisco_ios_parameters)
+
+        return ConnectHandler(**cisco_ios_parameters)
 
     def get_platform_detail(self):
         """
         Method used to pull device platform details such serial number and model
         """
+        try:
+            session = self.main_session()
+            with session:
+                session.enable()
+                output = session.send_command('show inventory')
+                pattern = self.re.compile(r'[PIDpid]+:\s+([A-Za-z0-9]+).*[SsNn:]+\s+([0-9A-Za-z]+).*')
+                match = pattern.finditer(output)
+                #print(match)
+                for i in match:
+                    model, serial = i.group(1, 2)
+                    if model and serial:
+                        break
+
+            return {'model': model, 'serial_number': serial}
+        except AuthenticationException as error:
+            #this will raise authentication error when wrong credentials are
+            #provided
+            raise error
+        except NetMikoTimeoutException as error:
+            #this will raise a connection timeout exception when device is
+            #unreachable
+            raise error
+        except SSHException as error:
+            #this will raise an  SSH service exception when unable to establish
+            #an SSH session
+            raise error
 
     def get_running_config(self):
         """
         This method is used to retrieve unstructured running configuration
         """
         try:
-            session = main_session()
+            session = self.main_session()
 
             with session:
                 session.enable()
