@@ -9,7 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
 from requests.exceptions import ConnectionError
 #custom modules
-from main_app.models import DeviceDetail, Devices
+from main_app.models import DeviceDetail, Devices, DeviceInterfaces
 
 
 _config = """
@@ -105,6 +105,59 @@ def sync_config(device_ip, device_id, user):
     except ConnectionError as error:
         raise error
 
+def sync_interfaces(device_ip, device_id):
+    try:
+        device_object = Devices.objects.get(id=device_id)
+        #find serial number & model
+        if device_object.vendor == "C":
+            if device_object.operating_system == '1':
+                #operating system 1 is Cisco IOS
+                from .api_scripts import (CiscoIOS)
+                interfaces =CiscoIOS(device_ip)
+                pass
+            elif device_object.operating_system == '2':
+                #Cisco IOS-XE
+                from .api_scripts import (CiscoIOSXE)
+                interfaces = CiscoIOSXE(device_ip)
+            elif device_object.operating_system == '3':
+                # Cisco IOS-XR
+                pass
+            elif device_object.operating_system == '4':
+                # Cisco NX-OS
+                pass
+
+        device_interfaces = interfaces.get_interfaces()
+        object = DeviceInterfaces.objects.get(device_id=device_id)
+        # update record if configuration record exist
+        interface_list = list()
+        for interface_type, interfaces in device_interfaces.items():
+            for interface in interfaces:
+                interface_list.append(interface)
+        all_interfaces = "\n".join(interface_list)
+        DeviceInterfaces.objects.filter(device_id=device_id).update(
+                                interfaces=all_interfaces)
+
+        #last_modify=datetime.datetime.now()
+        return HttpResponse(status=202)
+    except ObjectDoesNotExist:
+        # New object will be created if ObjectDoesNotExist exception triggers
+        interface_list = list()
+        for interface_type, interfaces in device_interfaces.items():
+            for interface in interfaces:
+                interface_list.append(interface)
+        all_interfaces = "\n".join(interface_list)
+        sync_conf = DeviceInterfaces.objects.get_or_create(
+                                            interfaces=all_interfaces,
+                                            device_id=device_id,
+                                            )[0]
+
+        sync_conf.save()
+
+        return HttpResponse(status=201)
+    except UnboundLocalError as error:
+        raise error
+    except ConnectionError as error:
+        raise error
 
 if __name__ == "__main__":
     print("Updating record")

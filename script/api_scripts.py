@@ -73,6 +73,32 @@ class CiscoIOSXE:
         except AuthenticationError as error:
             raise error
 
+    def get_interfaces(self):
+
+        running_config_url = self.restconf_base + "/Cisco-IOS-XE-native:native/interface"
+        url = running_config_url.format(ip=self.ip, port='443')
+        try:
+            r = self.requests.get(url,
+                        headers = self.restconf_headers,
+                        auth=(self.user, self.password),
+                        verify=False)
+            if r.ok:
+                #process JSON data into Python Dictionary and use
+                #running = self.json.dumps(r.json(), indent=4)
+                interface_list = dict()
+                #interface_list =[f'{x}{x["name"]}' for x in r.json()['Cisco-IOS-XE-native:interface']]
+                for x in r.json()['Cisco-IOS-XE-native:interface']:
+                    interface_list[f'{x}'] = [f'{x}' + str(i['name']) for i in r.json()['Cisco-IOS-XE-native:interface'][x]]
+                return interface_list
+            elif r.status_code == 401:
+                raise AuthenticationError("Invalid user name and password.")
+
+        except self.ConnectionError as error:
+            raise error
+        except AuthenticationError:
+            print("Authentication error yo")
+
+
 
 
 class CiscoIOS:

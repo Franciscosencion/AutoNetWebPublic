@@ -13,7 +13,7 @@ from netmiko.ssh_exception import (AuthenticationException,
 from paramiko.ssh_exception import SSHException
 from . import models
 from .forms import SitesForm, DeviceForm
-from script.pullconfig_script import sync_config
+from script.pullconfig_script import sync_config, sync_interfaces
 from script.api_scripts import AuthenticationError
 
 # Create your views here.
@@ -172,6 +172,46 @@ def sync_configuration(request, deviceip, deviceid):
         return HttpResponseRedirect(reverse(f'main_app:devicedetail',
                                         kwargs={'pk': deviceid}))
 
+@login_required
+def discover_interfaces(request, deviceip, deviceid):
+    success_url = f'devices/{deviceid}'
+    try:
+        user = request.user
+        sync_interfaces(deviceip, deviceid)
+        messages.add_message(
+            request, messages.SUCCESS, f'Configuration has been synced')
+        return HttpResponseRedirect(reverse(f'main_app:devicedetail',
+                                        kwargs={'pk': deviceid}))
+    except ConnectionError:
+        messages.add_message(
+            request, messages.ERROR, f'IP {deviceip} unreachable')
+        return HttpResponseRedirect(reverse(f'main_app:devicedetail',
+                                        kwargs={'pk': deviceid}))
+    except AuthenticationError:
+        messages.add_message(
+            request, messages.ERROR, 'Invalid username and password')
+        return HttpResponseRedirect(reverse(f'main_app:devicedetail',
+                                        kwargs={'pk': deviceid}))
+    except AuthenticationException:
+        messages.add_message(
+            request, messages.ERROR, 'Invalid username and password')
+        return HttpResponseRedirect(reverse(f'main_app:devicedetail',
+                                        kwargs={'pk': deviceid}))
+    except NetMikoTimeoutException:
+        messages.add_message(
+            request, messages.ERROR, 'Connection request timeout')
+        return HttpResponseRedirect(reverse(f'main_app:devicedetail',
+                                        kwargs={'pk': deviceid}))
+    except SSHException:
+        messages.add_message(
+            request, messages.ERROR, 'Unable to establish SSH session, SSH enabled?')
+        return HttpResponseRedirect(reverse(f'main_app:devicedetail',
+                                        kwargs={'pk': deviceid}))
+    except Exception as error:
+        messages.add_message(
+            request, messages.WARNING, f'Unknown error has occurred: {error}')
+        return HttpResponseRedirect(reverse(f'main_app:devicedetail',
+                                        kwargs={'pk': deviceid}))
 
 @login_required
 def device_search_function(request):

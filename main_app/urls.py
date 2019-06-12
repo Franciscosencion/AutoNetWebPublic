@@ -27,6 +27,7 @@ urlpatterns = [
     path('deletedevice/<int:pk>', views.DeviceDeleteView.as_view(), name='deletedevice'),
     path('deleteconfig/config/<int:pk>', views.DeviceConfigDeleteView.as_view(), name='deleteconfig'),
     path('devices/<deviceip>&<deviceid>', views.sync_configuration, name='configsync'),
+    path('devices/interfaces/sync/<deviceip>&<deviceid>', views.discover_interfaces, name='syncinterfaces'),
     path('search/', views.device_search_function, name='search'),
 
 ]

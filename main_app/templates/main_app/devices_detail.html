@@ -5,6 +5,17 @@
 
 <div class="" style="width: 50%; margin-left: auto; margin-right: auto;">
   <h2>Device Details:</h2>
+    <div class="">
+      <a class="mycustom-select float-right" id="task-dropdown" style="margin-left: 10px;" role="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        View
+      </a>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+        <!-- <a class="dropdown-item" href="#">Interfaces</a> -->
+        <a class="dropdown-item" type="button"  data-toggle="modal" data-target="#exampleModal">
+          Interfaces
+        </a>
+      </div>
+    </div>
     <div >
       <a class="mycustom-select float-right" id="task-dropdown"role="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         Tasks
@@ -19,6 +30,7 @@
 
         {%elif device_detail.device_type == 'R'%}
           <a class="dropdown-item" href="#">Run Script</a>
+          <a class="dropdown-item" href="interfaces/sync/{{device_detail.device_ip}}&{{device_detail.id}}">Sync Interfaces<i class="material-icons" style="height: 0; color: green;">sync</i></a>
         {%endif%}
 
       </div>
@@ -27,13 +39,25 @@
         <div class="modal-dialog " role="document" >
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+              <h5 class="modal-title" id="exampleModalLabel">Interfaces</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">
-                hello
+              <table class="ctable ctable-noSideBorder">
+                <thead class="layout">
+                  <th>Interfaces</th>
+                </thead>
+                <tbody>
+                  {%for interface in device_detail.device_interfaces.interfaces.splitlines%}
+                  <tr>
+                    <td>{{interface}}</td>
+                  </tr>
+                  {%endfor%}
+                </tbody>
+              </table>
+
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
