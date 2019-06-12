@@ -11,9 +11,10 @@
       </a>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
         <!-- <a class="dropdown-item" href="#">Interfaces</a> -->
-        <a class="dropdown-item" type="button"  data-toggle="modal" data-target="#exampleModal">
+        <a class="dropdown-item"   data-toggle="modal" data-target="#exampleModal">
           Interfaces
         </a>
+        <a class="dropdown-item" href="config/{{device_detail.id}}" >Configuration</a>
       </div>
     </div>
     <div >
@@ -90,15 +91,7 @@
             <td style="font-weight: bold;">Location: </td>
             <td>{{device_detail.site.site_name}}</td>
           </tr>
-          <tr>
-            <td style="font-weight: bold;">Configuration: </td>
-            <td>
-              <a href="config/{{device_detail.id}}" >View</a>
-            </td>
-
-          </tr>
         </tbody>
-
       </table>
     </table>
     <br>
