@@ -22,11 +22,11 @@ class CiscoIOSXE:
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
-    def __init__(self, ip, user="cisco", password="cisco"):
+    def __init__(self, ip, username="cisco", password="cisco"):
         """initialization method"""
 
         self.ip = ip
-        self.user = user
+        self.username = username
         self.password = password
 
     def get_platform_detail(self):
@@ -38,7 +38,7 @@ class CiscoIOSXE:
         try:
             r = self.requests.get(url,
                             headers = self.restconf_headers,
-                            auth=(self.user, self.password),
+                            auth=(self.username, self.password),
                             verify=False)
             if r.ok:
                 #process JSON data into Python Dictionary and use
@@ -59,7 +59,7 @@ class CiscoIOSXE:
         try:
             r = self.requests.get(url,
                             headers = self.restconf_headers,
-                            auth=(self.user, self.password),
+                            auth=(self.username, self.password),
                             verify=False)
             if r.ok:
                 #process JSON data into Python Dictionary and use
@@ -80,7 +80,7 @@ class CiscoIOSXE:
         try:
             r = self.requests.get(url,
                         headers = self.restconf_headers,
-                        auth=(self.user, self.password),
+                        auth=(self.username, self.password),
                         verify=False)
             if r.ok:
                 #process JSON data into Python Dictionary and use

@@ -35,8 +35,53 @@ class PatternFinder:
         except Exception as error:
             return(error)
 
+class DataBaseActions:
 
-def sync_config(device_ip, device_id, user):
+    def __init__(self, device_id):
+
+        self.device_id = device_id
+
+    def update_interfaces(self, all_interfaces):
+
+        DeviceInterfaces.objects.filter(device_id=self.device_id).update(
+                                        interfaces=all_interfaces)
+
+    def create_interfaces(self, all_interfaces):
+
+        save = DeviceInterfaces.objects.get_or_create(
+                                            interfaces=all_interfaces,
+                                            device_id=self.device_id,
+                                            )[0]
+        save.save()
+
+    def update_configuration(self, configuration, user):
+
+        DeviceDetail.objects.filter(device_id_id=self.device_id).update(
+                                device_config=configuration[
+                                'running_config'],
+                                device_script="NA",
+                                modified_by = user,
+                                last_modify = timezone.now())
+
+    def create_configuration(self, configuration, user):
+
+        sync_conf = DeviceDetail.objects.get_or_create(
+                                device_config=configuration[
+                                'running_config'],
+                                device_script="NA",
+                                created_by = user,
+                                modified_by = user,
+                                device_id_id=self.device_id)[0]
+        sync_conf.save()
+
+    def sync_platform_attributes(self, device_details):
+
+        Devices.objects.filter(id=self.device_id).update(
+                                device_model=device_details["model"],
+                                device_sn=device_details["serial_number"])
+
+
+def sync_platform(device_ip, device_id):
 
     """
     sync_config will utilize netmiko API to connect to remote device and
@@ -64,48 +109,62 @@ def sync_config(device_ip, device_id, user):
                 # Cisco NX-OS
                 pass
 
-        device_detail = platform_detail.get_platform_detail()
-        #get constructed config through RESTCONF
-        #running_config = platform_detail.get_running_config()
-        #get unconstructed config through Netmiko
-        device_config = platform_detail.get_running_config()
-        object = DeviceDetail.objects.get(device_id_id=device_id)
-        # update record if configuration record exist
-        DeviceDetail.objects.filter(device_id_id=device_id).update(
-                                device_config=device_config[
-                                'running_config'],
-                                device_script="NA",
-                                modified_by = user,
-                                last_modify = timezone.now())
+        device_details = platform_detail.get_platform_detail()
+        device_interfaces = platform_detail.get_interfaces()
+        #instantiate the database action class
+        action = DataBaseActions(device_id)
+        #formatting interfaces into multiline string
+        interface_list = list()
+        for interface_type, interfaces in device_interfaces.items():
+            for interface in interfaces:
+                interface_list.append(interface)
+        all_interfaces = "\n".join(interface_list) # interfaces formmated
 
-        Devices.objects.filter(id=device_id).update(
-                                device_model=device_detail["model"],
-                                device_sn=device_detail["serial_number"])
-        #last_modify=datetime.datetime.now()
-        return HttpResponse(status=202)
-    except ObjectDoesNotExist:
-        # New object will be created if ObjectDoesNotExist exception triggers
-        sync_conf = DeviceDetail.objects.get_or_create(
-                                device_config=device_config[
-                                'running_config'],
-                                device_script="NA",
-                                created_by = user,
-                                modified_by = user,
-                                device_id_id=device_id)[0]
-        sync_conf.save()
-        Devices.objects.filter(id=device_id).update(
-                                device_model=device_detail["model"],
-                                device_sn=device_detail["serial_number"])
-
-
-
+        try:
+            #if interface object exist will update it in the db
+            object = DeviceInterfaces.objects.get(device_id=device_id)
+            action.update_interfaces(all_interfaces)
+            action.sync_platform_attributes(device_details)
+        except ObjectDoesNotExist:
+            #will create object
+            action.create_interfaces(all_interfaces)
+            action.sync_platform_attributes(device_details)
+        #
+        #
+        #
+        # # update record if configuration record exist
+        # DeviceDetail.objects.filter(device_id_id=device_id).update(
+        #                         device_config=device_config[
+        #                         'running_config'],
+        #                         device_script="NA",
+        #                         modified_by = user,
+        #                         last_modify = timezone.now())
+        #
+        # Devices.objects.filter(id=device_id).update(
+        #                         device_model=device_detail["model"],
+        #                         device_sn=device_detail["serial_number"])
+        # #last_modify=datetime.datetime.now()
+    # except ObjectDoesNotExist:
+    #     # New object will be created if ObjectDoesNotExist exception triggers
+    #     sync_conf = DeviceDetail.objects.get_or_create(
+    #                             device_config=device_config[
+    #                             'running_config'],
+    #                             device_script="NA",
+    #                             created_by = user,
+    #                             modified_by = user,
+    #                             device_id_id=device_id)[0]
+    #     sync_conf.save()
+    #     Devices.objects.filter(id=device_id).update(
+    #                             device_model=device_detail["model"],
+    #                             device_sn=device_detail["serial_number"])
         return HttpResponse(status=201)
     except UnboundLocalError as error:
         raise error
     except ConnectionError as error:
         raise error
 
-def sync_interfaces(device_ip, device_id):
+def sync_device_configuration(device_ip, device_id, user):
+
     try:
         device_object = Devices.objects.get(id=device_id)
         #find serial number & model
@@ -113,12 +172,12 @@ def sync_interfaces(device_ip, device_id):
             if device_object.operating_system == '1':
                 #operating system 1 is Cisco IOS
                 from .api_scripts import (CiscoIOS)
-                interfaces =CiscoIOS(device_ip)
+                platform_detail =CiscoIOS(device_ip)
                 pass
             elif device_object.operating_system == '2':
                 #Cisco IOS-XE
                 from .api_scripts import (CiscoIOSXE)
-                interfaces = CiscoIOSXE(device_ip)
+                platform_detail = CiscoIOSXE(device_ip)
             elif device_object.operating_system == '3':
                 # Cisco IOS-XR
                 pass
@@ -126,38 +185,26 @@ def sync_interfaces(device_ip, device_id):
                 # Cisco NX-OS
                 pass
 
-        device_interfaces = interfaces.get_interfaces()
-        object = DeviceInterfaces.objects.get(device_id=device_id)
-        # update record if configuration record exist
-        interface_list = list()
-        for interface_type, interfaces in device_interfaces.items():
-            for interface in interfaces:
-                interface_list.append(interface)
-        all_interfaces = "\n".join(interface_list)
-        DeviceInterfaces.objects.filter(device_id=device_id).update(
-                                interfaces=all_interfaces)
+        device_config = platform_detail.get_running_config()
+        #instantiate the database action class
+        action = DataBaseActions(device_id)
 
-        #last_modify=datetime.datetime.now()
-        return HttpResponse(status=202)
-    except ObjectDoesNotExist:
-        # New object will be created if ObjectDoesNotExist exception triggers
-        interface_list = list()
-        for interface_type, interfaces in device_interfaces.items():
-            for interface in interfaces:
-                interface_list.append(interface)
-        all_interfaces = "\n".join(interface_list)
-        sync_conf = DeviceInterfaces.objects.get_or_create(
-                                            interfaces=all_interfaces,
-                                            device_id=device_id,
-                                            )[0]
+        try:
+            object = DeviceDetail.objects.get(device_id_id=device_id)
+            action.update_configuration(device_config, user)
 
-        sync_conf.save()
+
+        except ObjectDoesNotExist:
+            action.create_configuration(device_config, user)
+
 
         return HttpResponse(status=201)
     except UnboundLocalError as error:
         raise error
     except ConnectionError as error:
         raise error
+
+
 
 if __name__ == "__main__":
     print("Updating record")

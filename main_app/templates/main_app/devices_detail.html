@@ -30,9 +30,9 @@
 
         {%elif device_detail.device_type == 'R'%}
           <a class="dropdown-item" href="#">Run Script</a>
-          <a class="dropdown-item" href="interfaces/sync/{{device_detail.device_ip}}&{{device_detail.id}}">Sync Interfaces<i class="material-icons" style="height: 0; color: green;">sync</i></a>
         {%endif%}
-
+        <a class="dropdown-item" href="platformsync/{{device_detail.device_ip}}&{{device_detail.id}}">Sync Platform Details<i class="material-icons" style="height: 0; color: green;">sync</i></a>
+        <a class="dropdown-item" href="syncconfig/{{device_detail.device_ip}}&{{device_detail.id}}">Sync Configuration<i class="material-icons" style="height: 0; color: green;">sync</i></a>
       </div>
       <!-- Modal -->
       <div class="modal fade" style="width: 100%;" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -94,7 +94,6 @@
             <td style="font-weight: bold;">Configuration: </td>
             <td>
               <a href="config/{{device_detail.id}}" >View</a>
-              <a href="{{device_detail.device_ip}}&{{device_detail.id}}"><button type="button" class="btn-class" id="btn-sync" style="margin-left: 10px;"><i class="material-icons">sync</i></button></a>
             </td>
 
           </tr>
