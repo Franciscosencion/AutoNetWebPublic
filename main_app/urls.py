@@ -29,5 +29,6 @@ urlpatterns = [
     path('devices/syncconfig/<deviceip>&<deviceid>', views.sync_configuration, name='configsync'),
     path('devices/platformsync/<deviceip>&<deviceid>', views.get_platform_detail, name='platformsync'),
     path('search/', views.device_search_function, name='search'),
+    path('devices/tasks/vlanchange/<deviceip>&<deviceid>', views.port_vlan_assignment, name='vlanchange'),
 
 ]

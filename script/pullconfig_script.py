@@ -205,6 +205,40 @@ def sync_device_configuration(device_ip, device_id, user):
         raise error
 
 
+def vlan_change(deviceip, interface_type, interfaces, data_vlan_id,
+                    voice_vlan_id):
+
+    """
+    """
+
+    try:
+        device_object = Devices.objects.get(id=device_id)
+        #find serial number & model
+        if device_object.vendor == "C":
+            if device_object.operating_system == '1':
+                #operating system 1 is Cisco IOS
+                from .api_scripts import (CiscoIOS)
+                session = CiscoIOS(device_ip)
+                pass
+            elif device_object.operating_system == '2':
+                #Cisco IOS-XE
+                from .api_scripts import (CiscoIOSXE)
+                session = CiscoIOSXE(device_ip)
+            elif device_object.operating_system == '3':
+                # Cisco IOS-XR
+                pass
+            elif device_object.operating_system == '4':
+                # Cisco NX-OS
+                pass
+
+        action = session.change_port_vlan_assignment(interface_type,
+                                                    interfaces, data_vlan_id,
+                                                    voice_vlan_id)
+        return action
+    except Exception as error:
+        raise error
+
+
 
 if __name__ == "__main__":
     print("Updating record")

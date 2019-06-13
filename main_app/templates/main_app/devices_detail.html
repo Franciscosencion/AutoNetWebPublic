@@ -25,9 +25,9 @@
         {%if device_detail.device_type == 'S'%}
           <!-- <a class="dropdown-item" href="#">VLAN Change</a> -->
           <!-- Button trigger modal -->
-          <button class="dropdown-item" type="button"  data-toggle="modal" data-target="#exampleModal">
-            Launch demo modal
-          </button>
+          <a class="dropdown-item"  data-toggle="modal" data-target="#VlanchangeModal">
+            Port VLAN Change
+          </a>
 
         {%elif device_detail.device_type == 'R'%}
           <a class="dropdown-item" href="#">Run Script</a>
@@ -35,7 +35,7 @@
         <a class="dropdown-item" href="platformsync/{{device_detail.device_ip}}&{{device_detail.id}}">Sync Platform Details<i class="material-icons" style="height: 0; color: green;">sync</i></a>
         <a class="dropdown-item" href="syncconfig/{{device_detail.device_ip}}&{{device_detail.id}}">Sync Configuration<i class="material-icons" style="height: 0; color: green;">sync</i></a>
       </div>
-      <!-- Modal -->
+      <!-- View Interface Modal -->
       <div class="modal fade" style="width: 100%;" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog " role="document" >
           <div class="modal-content">
@@ -58,11 +58,43 @@
                   {%endfor%}
                 </tbody>
               </table>
-
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
               <button type="button" class="btn_class" id="btn-save">Run</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- VLAN Change Modal -->
+      <div class="modal fade" style="width: 100%;" id="VlanchangeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog " role="document" >
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Port VLAN Change</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <!-- Code goes here -->
+              <form class="" action="tasks/vlanchange/{{device_detail.device_ip}}&{{device_detail.id}}" method="get" id="vlanchangeform">
+                {%csrf_token%}
+                <select class="mycustom-select" name="interface_type" form="vlanchangeform">
+                  <option value="" selected>-- Select Interface Type --</option>
+                  <option value="Ethernet">Ethernet</option>
+                  <option value="FastEthernet">FastEthernet</option>
+                  <option value="GigabitEthernet">GigabitEthernet</option>
+                  <option value="TenGigabitEthernet">TenGigabitEthernet</option>
+                  <option value="TwentyFiveGigE">TwentyFiveGigE</option>
+                  <option value="FortyGigabitEthernet">FortyGigabitEthernet</option>
+                </select>
+                <input class="textinputclass" type="text" name="interface" form="vlanchangeform" value="" placeholder="Enter Interfaces">
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="submit" class="btn_class" id="btn-save">Run</button>
+                </div>
+              </form>
             </div>
           </div>
         </div>

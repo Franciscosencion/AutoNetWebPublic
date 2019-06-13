@@ -9,7 +9,11 @@ class AuthenticationError(Exception):
         super().__init__(msg)
 
 class CiscoIOSXE:
-
+    """
+    API calls in this class have been tested on Cisco IOS-XE version 16.11.01b
+    Ensure software version has the same capabilities and modules for the
+    calls perform in the different methods of this class.
+    """
     #imports needed for class methods
     import xmltodict, os, urllib3, requests, json
     from requests.exceptions import ConnectionError
@@ -17,12 +21,13 @@ class CiscoIOSXE:
 
     # Setup base variable for request
     restconf_headers = {"Accept": "application/yang-data+json"}
+
     restconf_base = "https://{ip}:{port}/restconf/data"
     #disable self-signed certificates warning for demo
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
-    def __init__(self, ip, username="cisco", password="cisco"):
+    def __init__(self, ip, username="developer", password="C1sco12345"):
         """initialization method"""
 
         self.ip = ip
@@ -97,6 +102,56 @@ class CiscoIOSXE:
             raise error
         except AuthenticationError:
             print("Authentication error yo")
+
+    def change_port_vlan_assignment(self, interface_type, interface,
+                                    data_vlan_id, voice_vlan_id):
+        restconf_headers = {"Content-Type": "application/yang-data+json"}
+        platform_info_url = self.restconf_base + "/Cisco-IOS-XE-native:native/interface/{interface_type}/"
+        url = platform_info_url.format(ip=self.ip, port='443', interface_type=interface_type)
+
+        data ={
+            f"Cisco-IOS-XE-native:{interface_type}":
+                {
+                    "name": interface,
+                    "switchport": {
+                        "Cisco-IOS-XE-switch:access": {
+                            "vlan": {
+                                "vlan": data_vlan_id
+                            }
+                        },
+                        "Cisco-IOS-XE-switch:mode": {
+                            "access": {}
+                        },
+                        "Cisco-IOS-XE-switch:voice": {
+                        "vlan": {
+                            "vlan": voice_vlan_id
+                        }
+                        }
+                    }
+                }
+            }
+
+        try:
+            r = self.requests.patch(url,
+                            headers = restconf_headers,
+                            json=data,
+                            auth=(self.username, self.password),
+                            verify=False)
+            if r.status_code >= 200 and r.status_code <= 226:
+                if r.status_code == 201:
+                    return ("Created")
+                elif r.status_code == 202:
+                    return ("Accepted")
+                elif r.status_code == 204:
+                    return ("Request processed Successfully")
+                else:
+                    #process JSON data into Python Dictionary and use
+                    return ("Request Status Code: {}".format(r.status_code))
+
+        except AuthenticationError as error:
+            raise error
+        except self.requests.exceptions.RequestException as error:
+            raise error
 
 
 

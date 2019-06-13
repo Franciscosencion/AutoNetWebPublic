@@ -13,7 +13,10 @@ from netmiko.ssh_exception import (AuthenticationException,
 from paramiko.ssh_exception import SSHException
 from . import models
 from .forms import SitesForm, DeviceForm
-from script.pullconfig_script import (sync_platform, sync_device_configuration)
+from script.pullconfig_script import (sync_platform,
+                                        sync_device_configuration,
+                                        vlan_change,
+                                        )
 from script.api_scripts import AuthenticationError
 
 # Create your views here.
@@ -214,6 +217,58 @@ def sync_configuration(request, deviceip, deviceid):
         return HttpResponseRedirect(reverse(f'main_app:devicedetail',
                                         kwargs={'pk': deviceid}))
 
+@login_required
+def port_vlan_assignment(request, deviceip, deviceid):
+    success_url = f'devices/{deviceid}'
+    device_ip = deviceip
+    device_id = deviceid
+    interface_type = request.GET.get('interface_type')
+    interfaces = request.GET.get('interface')
+    data_vlan_id = request.GET.get('data_vlan')
+    voice_vlan_id = request.GET.get('voice_vlan_id')
+    print(device_ip)
+    print(device_id)
+    print(interface_type)
+    print(interfaces)
+
+    try:
+        action = vlan_change(deviceip, interface_type,
+                            interfaces, int(data_vlan_id),
+                            int(voice_vlan_id))
+        messages.add_message(
+            request, messages.SUCCESS, f'{action}')
+        return HttpResponseRedirect(reverse(f'main_app:devicedetail',
+                                        kwargs={'pk': deviceid}))
+    except ConnectionError:
+        messages.add_message(
+            request, messages.ERROR, f'IP {deviceip} unreachable')
+        return HttpResponseRedirect(reverse(f'main_app:devicedetail',
+                                        kwargs={'pk': deviceid}))
+    except AuthenticationError:
+        messages.add_message(
+            request, messages.ERROR, 'Invalid username and password')
+        return HttpResponseRedirect(reverse(f'main_app:devicedetail',
+                                        kwargs={'pk': deviceid}))
+    except AuthenticationException:
+        messages.add_message(
+            request, messages.ERROR, 'Invalid username and password')
+        return HttpResponseRedirect(reverse(f'main_app:devicedetail',
+                                        kwargs={'pk': deviceid}))
+    except NetMikoTimeoutException:
+        messages.add_message(
+            request, messages.ERROR, 'Connection request timeout')
+        return HttpResponseRedirect(reverse(f'main_app:devicedetail',
+                                        kwargs={'pk': deviceid}))
+    except SSHException:
+        messages.add_message(
+            request, messages.ERROR, 'Unable to establish SSH session, SSH enabled?')
+        return HttpResponseRedirect(reverse(f'main_app:devicedetail',
+                                        kwargs={'pk': deviceid}))
+    except Exception as error:
+        messages.add_message(
+            request, messages.WARNING, f'Unknown error has occurred: {error}')
+        return HttpResponseRedirect(reverse(f'main_app:devicedetail',
+                                        kwargs={'pk': deviceid}))
 
 @login_required
 def device_search_function(request):
