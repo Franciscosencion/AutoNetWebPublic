@@ -27,7 +27,7 @@ class CiscoIOSXE:
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
-    def __init__(self, ip, username="developer", password="C1sco12345"):
+    def __init__(self, ip, username="cisco", password="cisco"):
         """initialization method"""
 
         self.ip = ip
@@ -93,7 +93,8 @@ class CiscoIOSXE:
                 interface_list = dict()
                 #interface_list =[f'{x}{x["name"]}' for x in r.json()['Cisco-IOS-XE-native:interface']]
                 for x in r.json()['Cisco-IOS-XE-native:interface']:
-                    interface_list[f'{x}'] = [f'{x}' + str(i['name']) for i in r.json()['Cisco-IOS-XE-native:interface'][x]]
+                    #interface_list[f'{x}'] = [f'{x}' + str(i['name']) for i in r.json()['Cisco-IOS-XE-native:interface'][x]]
+                    interface_list[f'{x}'] = [i['name'] for i in r.json()['Cisco-IOS-XE-native:interface'][x]]
                 return interface_list
             elif r.status_code == 401:
                 raise AuthenticationError("Invalid user name and password.")
@@ -153,7 +154,28 @@ class CiscoIOSXE:
         except self.requests.exceptions.RequestException as error:
             raise error
 
+    def get_vlans(self):
 
+        running_config_url = self.restconf_base + "/Cisco-IOS-XE-native:native/vlan/vlan-list"
+        url = running_config_url.format(ip=self.ip, port='443')
+        try:
+            r = self.requests.get(url,
+                        headers = self.restconf_headers,
+                        auth=(self.username, self.password),
+                        verify=False)
+            if r.ok:
+                #process JSON data into Python Dictionary and use
+                running = self.json.dumps(r.json(), indent=4)
+                vlan_list = dict()
+                #interface_list =[f'{x}{x["name"]}' for x in r.json()['Cisco-IOS-XE-native:interface']]
+                for vlan  in r.json()['Cisco-IOS-XE-vlan:vlan-list']:
+                    vlan_list[f"{vlan['name']}"] = vlan['id']
+                return vlan_list
+
+        except self.requests.exceptions.RequestException as error:
+            raise error
+        except AuthenticationError as error:
+            raise error
 
 
 class CiscoIOS:

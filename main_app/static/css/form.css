@@ -110,6 +110,7 @@
   width: 100%;
   height: calc(2.25rem + 2px);
   padding: .375rem 1.75rem .375rem .75rem;
+  margin-bottom: 20px;
   line-height: 1.5;
   color: #495057;
   vertical-align: middle;
@@ -258,4 +259,27 @@
 
 .modal-body {
     max-height: 800px;
+}
+
+/* modal css */
+.mymodal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1050;
+    display: none;
+    overflow: hidden;
+    outline: 0;
+
+}
+
+.modaldialogsize {
+  width: 800px;
+  height: 800px;
+}
+
+.myfade {
+    transition: opacity .15s linear;
 }

@@ -16,6 +16,7 @@ from .forms import SitesForm, DeviceForm
 from script.pullconfig_script import (sync_platform,
                                         sync_device_configuration,
                                         vlan_change,
+                                        get_device_vlans,
                                         )
 from script.api_scripts import AuthenticationError
 
@@ -237,6 +238,47 @@ def port_vlan_assignment(request, deviceip, deviceid):
                             int(voice_vlan_id))
         messages.add_message(
             request, messages.SUCCESS, f'{action}')
+        return HttpResponseRedirect(reverse(f'main_app:devicedetail',
+                                        kwargs={'pk': deviceid}))
+    except ConnectionError:
+        messages.add_message(
+            request, messages.ERROR, f'IP {deviceip} unreachable')
+        return HttpResponseRedirect(reverse(f'main_app:devicedetail',
+                                        kwargs={'pk': deviceid}))
+    except AuthenticationError:
+        messages.add_message(
+            request, messages.ERROR, 'Invalid username and password')
+        return HttpResponseRedirect(reverse(f'main_app:devicedetail',
+                                        kwargs={'pk': deviceid}))
+    except AuthenticationException:
+        messages.add_message(
+            request, messages.ERROR, 'Invalid username and password')
+        return HttpResponseRedirect(reverse(f'main_app:devicedetail',
+                                        kwargs={'pk': deviceid}))
+    except NetMikoTimeoutException:
+        messages.add_message(
+            request, messages.ERROR, 'Connection request timeout')
+        return HttpResponseRedirect(reverse(f'main_app:devicedetail',
+                                        kwargs={'pk': deviceid}))
+    except SSHException:
+        messages.add_message(
+            request, messages.ERROR, 'Unable to establish SSH session, SSH enabled?')
+        return HttpResponseRedirect(reverse(f'main_app:devicedetail',
+                                        kwargs={'pk': deviceid}))
+    except Exception as error:
+        messages.add_message(
+            request, messages.WARNING, f'Unknown error has occurred: {error}')
+        return HttpResponseRedirect(reverse(f'main_app:devicedetail',
+                                        kwargs={'pk': deviceid}))
+
+@login_required
+def sync_device_vlans(request, deviceip, deviceid):
+    success_url = f'devices/{deviceid}'
+    try:
+
+        get_device_vlans(deviceip, deviceid)
+        messages.add_message(
+            request, messages.SUCCESS, f'VLANs synced')
         return HttpResponseRedirect(reverse(f'main_app:devicedetail',
                                         kwargs={'pk': deviceid}))
     except ConnectionError:

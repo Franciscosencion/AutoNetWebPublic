@@ -9,7 +9,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
 from requests.exceptions import ConnectionError
 #custom modules
-from main_app.models import DeviceDetail, Devices, DeviceInterfaces
+from main_app.models import (DeviceDetail, Devices,
+                            DeviceInterfaces, DeviceVlans,
+                            )
 
 
 _config = """
@@ -41,18 +43,21 @@ class DataBaseActions:
 
         self.device_id = device_id
 
-    def update_interfaces(self, all_interfaces):
+    #def update_interfaces(self, all_interfaces):
 
-        DeviceInterfaces.objects.filter(device_id=self.device_id).update(
-                                        interfaces=all_interfaces)
+    #    DeviceInterfaces.objects.filter(device_id=self.device_id).update(
+    #                                    interfaces=all_interfaces)
 
-    def create_interfaces(self, all_interfaces):
+    def sync_interfaces(self, interface_list):
 
-        save = DeviceInterfaces.objects.get_or_create(
-                                            interfaces=all_interfaces,
+        for interface_type, interface_numbers in interface_list.items():
+            for interface_number in interface_numbers:
+                interface_add = DeviceInterfaces.objects.get_or_create(
+                                            interface_type=interface_type,
+                                            interface_number=interface_number,
                                             device_id=self.device_id,
                                             )[0]
-        save.save()
+        interface_add.save()
 
     def update_configuration(self, configuration, user):
 
@@ -80,6 +85,14 @@ class DataBaseActions:
                                 device_model=device_details["model"],
                                 device_sn=device_details["serial_number"])
 
+    def vlans_add_to_db(self, vlans_dict):
+        for vlan_name, vlan_id in vlans_dict.items():
+            vlans_add = DeviceVlans.objects.get_or_create(
+                                    vlan_name =vlan_name,
+                                    vlan_id=vlan_id,
+                                    device_id=self.device_id)[0]
+
+        vlans_add.save()
 
 def sync_platform(device_ip, device_id):
 
@@ -114,21 +127,21 @@ def sync_platform(device_ip, device_id):
         #instantiate the database action class
         action = DataBaseActions(device_id)
         #formatting interfaces into multiline string
-        interface_list = list()
-        for interface_type, interfaces in device_interfaces.items():
-            for interface in interfaces:
-                interface_list.append(interface)
-        all_interfaces = "\n".join(interface_list) # interfaces formmated
+        #interface_list = list()
+        #for interface_type, interfaces in device_interfaces.items():
+        #    for interface in interfaces:
+        #        interface_list.append(interface)
+        #all_interfaces = "\n".join(interface_list) # interfaces formmated
 
-        try:
+        #try:
             #if interface object exist will update it in the db
-            object = DeviceInterfaces.objects.get(device_id=device_id)
-            action.update_interfaces(all_interfaces)
-            action.sync_platform_attributes(device_details)
-        except ObjectDoesNotExist:
+            #object = DeviceInterfaces.objects.get(device_id=device_id)
+        action.sync_interfaces(device_interfaces)
+        action.sync_platform_attributes(device_details)
+        #except ObjectDoesNotExist:
             #will create object
-            action.create_interfaces(all_interfaces)
-            action.sync_platform_attributes(device_details)
+        #    action.create_interfaces(all_interfaces)
+        #    action.sync_platform_attributes(device_details)
         #
         #
         #
@@ -196,6 +209,48 @@ def sync_device_configuration(device_ip, device_id, user):
 
         except ObjectDoesNotExist:
             action.create_configuration(device_config, user)
+
+
+        return HttpResponse(status=201)
+    except UnboundLocalError as error:
+        raise error
+    except ConnectionError as error:
+        raise error
+
+def get_device_vlans(device_ip, device_id):
+
+    try:
+        device_object = Devices.objects.get(id=device_id)
+        #find serial number & model
+        if device_object.vendor == "C":
+            if device_object.operating_system == '1':
+                #operating system 1 is Cisco IOS
+                from .api_scripts import (CiscoIOS)
+                session = CiscoIOS(device_ip)
+                pass
+            elif device_object.operating_system == '2':
+                #Cisco IOS-XE
+                from .api_scripts import (CiscoIOSXE)
+                session = CiscoIOSXE(device_ip)
+            elif device_object.operating_system == '3':
+                # Cisco IOS-XR
+                pass
+            elif device_object.operating_system == '4':
+                # Cisco NX-OS
+                pass
+
+        vlans_dict = session.get_vlans()
+        #
+        action = DataBaseActions(device_id)
+        try:
+            #object = DeviceDetail.objects.get(device_id_id=device_id)
+            action.vlans_add_to_db(vlans_dict)
+            # use update_or_create type of method without verifying device id
+
+        #except ObjectDoesNotExist:
+        #    action.create_configuration(device_config, user)
+        except Exception as error:
+            raise error
 
 
         return HttpResponse(status=201)

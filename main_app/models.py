@@ -78,13 +78,14 @@ class DeviceInterfaces(models.Model):
     """
     Model for device interfaces
     """
-    interfaces = models.TextField(null=True, blank=True)
-    device = models.OneToOneField(Devices, related_name='device_interfaces',
+    interface_type = models.CharField(max_length=200, null=True, blank=True)
+    interface_number = models.CharField(max_length=200, null=True, blank=True)
+    device = models.ForeignKey(Devices, related_name='device_interface',
                                         on_delete=models.CASCADE,
                                         null=True,
                                         blank=True)
     def __str__(self):
-        return self.device.device_name
+        return (f'{self.device.device_name} - {self.interface_type}{self.interface_number}')
 
 
 class DeviceVlans(models.Model):
@@ -93,10 +94,10 @@ class DeviceVlans(models.Model):
     """
     vlan_name = models.CharField(max_length=200, null=True, blank=True)
     vlan_id = models.IntegerField(null=True, blank=True)
-    device = models.OneToOneField(Devices, related_name='vlans',
+    device = models.ForeignKey(Devices, related_name='vlans',
                                         on_delete=models.CASCADE,
                                         null=True,
                                         blank=True)
 
     def __str__(self):
-        return self.device.device_name
+        return self.device.device_name + "_" + self.vlan_name

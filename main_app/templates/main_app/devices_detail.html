@@ -14,6 +14,9 @@
         <a class="dropdown-item"   data-toggle="modal" data-target="#exampleModal">
           Interfaces
         </a>
+        <a class="dropdown-item"   data-toggle="modal" data-target="#vlanModal">
+          VLANs
+        </a>
         <a class="dropdown-item" href="config/{{device_detail.id}}" >Configuration</a>
       </div>
     </div>
@@ -28,6 +31,10 @@
           <a class="dropdown-item"  data-toggle="modal" data-target="#VlanchangeModal">
             Port VLAN Change
           </a>
+          <a class="dropdown-item" href="syncvlans/{{device_detail.device_ip}}&{{device_detail.id}}">
+            Sync VLANS
+            <i class="material-icons" style="height: 0; color: green;">sync</i>
+          </a>
 
         {%elif device_detail.device_type == 'R'%}
           <a class="dropdown-item" href="#">Run Script</a>
@@ -36,7 +43,7 @@
         <a class="dropdown-item" href="syncconfig/{{device_detail.device_ip}}&{{device_detail.id}}">Sync Configuration<i class="material-icons" style="height: 0; color: green;">sync</i></a>
       </div>
       <!-- View Interface Modal -->
-      <div class="modal fade" style="width: 100%;" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog " role="document" >
           <div class="modal-content">
             <div class="modal-header">
@@ -45,16 +52,18 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="overflow:scroll; height:400px;">
               <table class="ctable ctable-noSideBorder">
                 <thead class="layout">
-                  <th>Interfaces</th>
+                  <th>Interface Type</th>
+                  <th>Interface Number</th>
                 </thead>
                 <tbody>
-                  {%for interface in device_detail.device_interfaces.interfaces.splitlines%}
-                  <tr>
-                    <td>{{interface}}</td>
-                  </tr>
+                  {%for interface in device_detail.device_interface.all%}
+                    <tr>
+                      <td>{{interface.interface_type}}</td>
+                      <td>{{interface.interface_number}}</td>
+                    </tr>
                   {%endfor%}
                 </tbody>
               </table>
@@ -66,21 +75,57 @@
           </div>
         </div>
       </div>
-      <!-- VLAN Change Modal -->
-      <div class="modal fade" style="width: 100%;" id="VlanchangeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <!-- View VLANS Modal -->
+      <div class="modal fade" style="width: 100%;" id="vlanModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog " role="document" >
           <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Interfaces</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <table class="ctable ctable-noSideBorder">
+                <thead class="layout">
+                  <th>VLAN NAME</th>
+                  <th>VLAN ID</th>
+                </thead>
+                <tbody>
+                  {%for vlan in device_detail.vlans.all%}
+                  <tr>
+                    <td>{{vlan.vlan_name}}</td>
+                    <td>{{vlan.vlan_id}}</td>
+                  </tr>
+                  {%endfor%}
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- VLAN Change Modal -->
+      <div class="mymodal myfade" id="VlanchangeModal"  aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modaldialogsize"  role="document" >
+          <div class="modal-content">
+            <!-- Modal Header -->
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLabel">Port VLAN Change</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <div class="modal-body">
+            <!-- Modal body -->
+
+            <div class="modal-body" >
               <!-- Code goes here -->
               <form class="" action="tasks/vlanchange/{{device_detail.device_ip}}&{{device_detail.id}}" method="get" id="vlanchangeform">
                 {%csrf_token%}
-                <select class="mycustom-select" name="interface_type" form="vlanchangeform">
+
+                <!-- <select id="interface_select" class="mycustom-select" name="interface_type" form="vlanchangeform" style="width: 70%; marging: 10px !important;">
                   <option value="" selected>-- Select Interface Type --</option>
                   <option value="Ethernet">Ethernet</option>
                   <option value="FastEthernet">FastEthernet</option>
@@ -88,8 +133,32 @@
                   <option value="TenGigabitEthernet">TenGigabitEthernet</option>
                   <option value="TwentyFiveGigE">TwentyFiveGigE</option>
                   <option value="FortyGigabitEthernet">FortyGigabitEthernet</option>
+                </select> -->
+                <!-- select for interfaces -->
+                <select class="mycustom-select" name="interface" form="vlanchangeform" style="width: 70%; marging-bottom: 10px;">
+                  <option value="" selected>-- Select Interface --</option>
+                  {%for interface in device_detail.device_interface.all%}
+                    <option value="{{interface.interface_type}}={{interface.interface_number}}">{{interface.interface_type}}{{interface.interface_number}}</option>
+                  {%endfor%}
                 </select>
-                <input class="textinputclass" type="text" name="interface" form="vlanchangeform" value="" placeholder="Enter Interfaces">
+                <!-- select for data vlan -->
+                <select class="mycustom-select" name="data_vlan_id" form="vlanchangeform" style="width: 70%; marging-bottom: 10px;">
+                  <option value="" selected>-- Select Data VLAN --</option>
+                  {%for vlan in device_detail.vlans.all%}
+                    <option value={{vlan.vlan_id}}>{{vlan.vlan_name}} - ID {{vlan.vlan_id}}</option>
+                  {%endfor%}
+                  <option value="Ethernet">Ethernet</option>
+                </select>
+                <!-- select for voice vlan -->
+                <select class="mycustom-select" name="voice_vlan_id" form="vlanchangeform" style="width: 70%; marging-bottom: 10px;">
+                  <option value="" selected>-- Select Voice VLAN --</option>
+                  {%for vlan in device_detail.vlans.all%}
+                    <option value={{vlan.vlan_id}}>{{vlan.vlan_name}} - ID {{vlan.vlan_id}}</option>
+                  {%endfor%}
+                  <option value="Ethernet">Ethernet</option>
+                </select>
+                <!-- <input class="textinputclass" type="text" name="interface" form="vlanchangeform" value="" placeholder="Enter Interfaces"> -->
+                <!-- Modal footer -->
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                   <button type="submit" class="btn_class" id="btn-save">Run</button>

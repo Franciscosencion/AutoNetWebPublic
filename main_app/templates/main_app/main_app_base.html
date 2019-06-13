@@ -80,6 +80,54 @@
 
     {%endblock content %}
 
+
+    <!-- VLAN Change Modal -->
+    <div class="mymodal myfade" id="VlanchangeModal"  aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog"  role="document" >
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Port VLAN Change</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <!-- Code goes here -->
+            <form class="" action="tasks/vlanchange/{{device_detail.device_ip}}&{{device_detail.id}}" method="get" id="vlanchangeform">
+              {%csrf_token%}
+              <select class="mycustom-select" name="interface_type" form="vlanchangeform" style="width: 40%;">
+                <option value="" selected>-- Select Interface Type --</option>
+                <option value="Ethernet">Ethernet</option>
+                <option value="FastEthernet">FastEthernet</option>
+                <option value="GigabitEthernet">GigabitEthernet</option>
+                <option value="TenGigabitEthernet">TenGigabitEthernet</option>
+                <option value="TwentyFiveGigE">TwentyFiveGigE</option>
+                <option value="FortyGigabitEthernet">FortyGigabitEthernet</option>
+              </select>
+              <select class="mycustom-select" name="data_vlan_id" form="vlanchangeform" style="width: 30%;">
+                <option value="" selected>-- Select Data VLAN --</option>
+                {%for vlan in device_detail.vlans.all%}
+                  <option value={{vlan.vlan_id}}>{{vlan.vlan_name}} - ID {{vlan.vlan_id}}</option>
+                {%endfor%}
+                <option value="Ethernet">Ethernet</option>
+              </select>
+              <select class="mycustom-select" name="voice_vlan_id" form="vlanchangeform" style="width: 30%;">
+                <option value="" selected>-- Select Voice VLAN --</option>
+                {%for vlan in device_detail.vlans.all%}
+                  <option value={{vlan.vlan_id}}>{{vlan.vlan_name}} - ID {{vlan.vlan_id}}</option>
+                {%endfor%}
+                <option value="Ethernet">Ethernet</option>
+              </select>
+              <input class="textinputclass" type="text" name="interface" form="vlanchangeform" value="" placeholder="Enter Interfaces">
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn_class" id="btn-save">Run</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- Here goes the page footer -->
 
       <!-- <footer class="page-footer font-small special-color-dark pt-4">
