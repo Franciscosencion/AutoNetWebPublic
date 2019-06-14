@@ -45,6 +45,7 @@ class Devices(models.Model):
                                                 default=DEVICE_TYPES[0])
     operating_system = models.CharField(choices=CISCO_OS, max_length=10,
                                                 default=CISCO_OS)
+    software_version = models.CharField(max_length=300, null=True, blank=True)
     site = models.ForeignKey(Sites,
                             on_delete=models.CASCADE,
                             related_name = 'devices',

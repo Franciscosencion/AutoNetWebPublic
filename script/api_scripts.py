@@ -38,24 +38,51 @@ class CiscoIOSXE:
         """This method will pull both the platform model as well as
         platform serial number and return them in a dictionary
         """
-        platform_info_url = self.restconf_base + "/Cisco-IOS-XE-native:native/license/udi"
+        #platform_info_url = self.restconf_base + "/Cisco-IOS-XE-native:native/license/udi"
+        platform_info_url = self.restconf_base + "/Cisco-IOS-XE-native:native"
         url = platform_info_url.format(ip=self.ip, port='443')
         try:
+
             r = self.requests.get(url,
                             headers = self.restconf_headers,
                             auth=(self.username, self.password),
                             verify=False)
             if r.ok:
-                #process JSON data into Python Dictionary and use
-                return {'model': r.json()["Cisco-IOS-XE-native:udi"]['pid'],
-                    'serial_number':r.json()["Cisco-IOS-XE-native:udi"]['sn']}
+                #print(r.json()["Cisco-IOS-XE-native:native"]['version'])
+                old_iosex = [16.0, 16.1, 16.2, 16.3, 16.4, 16.5, 16.6,
+                            16.7, 16.8, 16.9, 16.10]
+                if float(r.json()["Cisco-IOS-XE-native:native"]['version']) in old_iosex:
 
+                    platform_info_url = self.restconf_base + "/Cisco-IOS-XE-native:native/license/udi"
+                    url = platform_info_url.format(ip=self.ip, port='443')
+                    request = self.requests.get(url,
+                                    headers = self.restconf_headers,
+                                    auth=(self.username, self.password),
+                                    verify=False)
+
+                    #process JSON data into Python Dictionary and use
+                    return {'model': request.json()["Cisco-IOS-XE-native:udi"]['pid'],
+                        'serial_number': request.json()["Cisco-IOS-XE-native:udi"]['sn'],
+                        'os_version': r.json()["Cisco-IOS-XE-native:native"]['version']} #will pull version from initial request
+                else:
+                    platform_info_url = self.restconf_base + "/Cisco-IOS-XE-device-hardware-oper:device-hardware-data/device-hardware/"
+                    url = platform_info_url.format(ip=self.ip, port='443')
+                    r = self.requests.get(url,
+                                    headers = self.restconf_headers,
+                                    auth=(self.username, self.password),
+                                    verify=False)
+                    #process JSON data into Python Dictionary and use
+                    serial_number = {'serial':x['serial-number'] for x in r.json()["Cisco-IOS-XE-device-hardware-oper:device-hardware"]['device-inventory'] if x['hw-type'] == 'hw-type-chassis'}
+                    model = {'model':x['part-number'] for x in r.json()["Cisco-IOS-XE-device-hardware-oper:device-hardware"]['device-inventory'] if x['hw-type'] == 'hw-type-chassis'}
+                    os_version = r.json()["Cisco-IOS-XE-device-hardware-oper:device-hardware"]['device-system-data']['software-version']
+                    return {'model':model['model'],
+                            'serial_number':serial_number['serial'],
+                            'os_version': os_version}
             elif r.status_code == 401:
                 raise AuthenticationError("Invalid user name and password.")
-        except self.ConnectionError as error:
+        except self.requests.exceptions.RequestException as error:
             raise error
-        except AuthenticationError as error:
-            raise error
+
 
     def get_running_config(self):
 
@@ -169,7 +196,11 @@ class CiscoIOSXE:
                 vlan_list = dict()
                 #interface_list =[f'{x}{x["name"]}' for x in r.json()['Cisco-IOS-XE-native:interface']]
                 for vlan  in r.json()['Cisco-IOS-XE-vlan:vlan-list']:
-                    vlan_list[f"{vlan['name']}"] = vlan['id']
+                    if 'name' in vlan.keys():
+                        vlan_list[f"{vlan['name']}"] = vlan['id']
+                    else:
+                        vlan_list[f"NONAME_{vlan['id']}"] = vlan['id']
+
                 return vlan_list
 
         except self.requests.exceptions.RequestException as error:

@@ -83,7 +83,8 @@ class DataBaseActions:
 
         Devices.objects.filter(id=self.device_id).update(
                                 device_model=device_details["model"],
-                                device_sn=device_details["serial_number"])
+                                device_sn=device_details["serial_number"],
+                                software_version=device_details["os_version"])
 
     def vlans_add_to_db(self, vlans_dict):
         for vlan_name, vlan_id in vlans_dict.items():
