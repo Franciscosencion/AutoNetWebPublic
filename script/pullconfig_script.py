@@ -261,25 +261,24 @@ def get_device_vlans(device_ip, device_id):
         raise error
 
 
-def vlan_change(deviceip, interface_type, interfaces, data_vlan_id,
-                    voice_vlan_id):
+def vlan_change(change_detail):
 
     """
     """
 
     try:
-        device_object = Devices.objects.get(id=device_id)
+        device_object = Devices.objects.get(id=change_detail['device_id'])
         #find serial number & model
         if device_object.vendor == "C":
             if device_object.operating_system == '1':
                 #operating system 1 is Cisco IOS
                 from .api_scripts import (CiscoIOS)
-                session = CiscoIOS(device_ip)
+                session = CiscoIOS(change_detail['ip'])
                 pass
             elif device_object.operating_system == '2':
                 #Cisco IOS-XE
                 from .api_scripts import (CiscoIOSXE)
-                session = CiscoIOSXE(device_ip)
+                session = CiscoIOSXE(change_detail['ip'])
             elif device_object.operating_system == '3':
                 # Cisco IOS-XR
                 pass
@@ -287,9 +286,11 @@ def vlan_change(deviceip, interface_type, interfaces, data_vlan_id,
                 # Cisco NX-OS
                 pass
 
-        action = session.change_port_vlan_assignment(interface_type,
-                                                    interfaces, data_vlan_id,
-                                                    voice_vlan_id)
+        action = session.change_port_vlan_assignment(
+                                        change_detail['interface_type'],
+                                        change_detail['interface_number'],
+                                        change_detail['data_vlan_id'],
+                                        change_detail['voice_vlan_id'])
         return action
     except Exception as error:
         raise error

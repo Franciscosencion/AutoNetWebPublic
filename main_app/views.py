@@ -28,21 +28,21 @@ class HomeTemplateView(LoginRequiredMixin, TemplateView):
 
 # Sites CBVs
 class SitesListView(LoginRequiredMixin, ListView):
+    """ CBV to display the created sites"""
     context_object_name = 'sites'
     model = models.Sites
     paginate_by = 10
 
 
 class SitesDetailView(LoginRequiredMixin, DetailView):
+    """ CBV to display site details"""
     context_object_name = 'sites_detail'
     model = models.Sites
     template_name = 'main_app/sites_detail.html'
 
 
 class SiteCreateView(LoginRequiredMixin, CreateView):
-    # fields = ('site_name', 'site_location',
-    #             'site_poc_name', 'site_poc_number',
-    #             'site_address')
+    """ CBV form to create new sites"""
     form_class = SitesForm
     model = models.Sites
 
@@ -54,6 +54,7 @@ class SiteCreateView(LoginRequiredMixin, CreateView):
 
 
 class SiteUpdateView(LoginRequiredMixin, UpdateView):
+    """ CBV form to update site details"""
     # fields = ('site_name', 'site_poc_name', 'site_poc_number')
     form_class = SitesForm
     model = models.Sites
@@ -67,6 +68,7 @@ class SiteUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class SiteDeleteView(LoginRequiredMixin, DeleteView):
+    """CBV delete form to delete sites"""
     context_object_name = 'site'
     model = models.Sites
     success_url = reverse_lazy('main_app:viewsites')
@@ -74,6 +76,7 @@ class SiteDeleteView(LoginRequiredMixin, DeleteView):
 
 # Devices CBVs
 class DeviceListView(LoginRequiredMixin, ListView):
+    "CBV to display created devices in the db"
     context_object_name = 'devices'
     model = models.Devices
     paginate_by = 10
@@ -81,12 +84,14 @@ class DeviceListView(LoginRequiredMixin, ListView):
 
 
 class DeviceDetailView(LoginRequiredMixin, DetailView):
+    "CBV to display device detail information"
     context_object_name = 'device_detail'
     model = models.Devices
     template_name = 'main_app/devices_detail.html'
 
 
 class DeviceCreateView(LoginRequiredMixin, CreateView):
+    "CBV form to create new devices"
     # fields = ('device_name', 'device_ip',
     #             'vendor',  'site')
     form_class = DeviceForm
@@ -100,6 +105,7 @@ class DeviceCreateView(LoginRequiredMixin, CreateView):
 
 
 class DeviceUpdateView(LoginRequiredMixin, UpdateView):
+    "CBV form to update device details"
     # fields = ('device_name', 'device_ip',
     #             'site', 'vendor')
     form_class = DeviceForm
@@ -113,23 +119,27 @@ class DeviceUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class DeviceDeleteView(LoginRequiredMixin, DeleteView):
+    "CBV to delete devices"
     context_object_name = 'device'
     model = models.Devices
     success_url = reverse_lazy('main_app:viewdevices')
 
 
 class DeviceConfigDetailView(LoginRequiredMixin, DetailView):
+    "CBV display device saved configuration"
     context_object_name = 'deviceconfig'
     model = models.DeviceDetail
     template_name = 'main_app/deviceconfig_view.html'
 
 
 class DeviceScriptDetailView(LoginRequiredMixin, DetailView):
+    "CBV display device saved custom scripts"
     context_object_name = 'devicescript'
     model = models.DeviceDetail
     template_name = 'main_app/devicescript_view.html'
 
 class DeviceConfigDeleteView(LoginRequiredMixin, DeleteView):
+    "CBV to delete device configurations from the db."
     context_object_name = 'deviceconfig'
     model = models.DeviceDetail
     success_url = reverse_lazy('main_app:viewdevices')
@@ -137,6 +147,17 @@ class DeviceConfigDeleteView(LoginRequiredMixin, DeleteView):
 
 
 def get_platform_detail(request, deviceip, deviceid):
+    """
+    get_platform_detail takes 3 arguements (request, ip, device_db_id)
+    function will then call the population function sync_platform under
+    pullconfig_script module, which will then call the OS class method
+    get_platform_detail under api_scripts module.
+
+    platform details will be returned by get_platform_detail in a dictionary
+    to be populated in the DB by sync_platform function using the
+    sync_platform_attributes method in class DataBaseActions under
+    pullconfig_script module in the script directory.
+    """
     success_url = f'devices/{deviceid}'
     try:
         sync_platform(deviceip, deviceid)
@@ -179,6 +200,14 @@ def get_platform_detail(request, deviceip, deviceid):
 
 @login_required
 def sync_configuration(request, deviceip, deviceid):
+    """
+    function will pass device ip and device db id to the population script
+    function sync_device_configuration under module pullconfig_script
+    which will call the method in the OS class under api_scripts module
+    to pull the running configuration of the device and return it in a
+    dictionary to be handled by sync_device_configuration function which
+    will perform a DB update function to update the configuration in the db.
+    """
     success_url = f'devices/{deviceid}'
     try:
         user = request.user
@@ -220,22 +249,24 @@ def sync_configuration(request, deviceip, deviceid):
 
 @login_required
 def port_vlan_assignment(request, deviceip, deviceid):
+    """
+    This function will call a method in api_scripts class and pass all values
+    selected through the user interface such interface, data vlan and voice vlan
+    input data will be stored in a dictionary which will then be passed to
+    the change_port_vlan_assignment method in the respective OS class.
+    """
     success_url = f'devices/{deviceid}'
-    device_ip = deviceip
-    device_id = deviceid
-    interface_type = request.GET.get('interface_type')
-    interfaces = request.GET.get('interface')
-    data_vlan_id = request.GET.get('data_vlan')
+    interface_detail = request.GET.get('interface').split("=")
+    data_vlan_id = request.GET.get('data_vlan_id')
     voice_vlan_id = request.GET.get('voice_vlan_id')
-    print(device_ip)
-    print(device_id)
-    print(interface_type)
-    print(interfaces)
-
+    change_detail = {'ip':deviceip, 'device_id': deviceid,
+                    'interface_type':interface_detail[0],
+                    'interface_number':interface_detail[1],
+                    'data_vlan_id':int(data_vlan_id),
+                    'voice_vlan_id':int(voice_vlan_id)}
+    #print(change_detail)
     try:
-        action = vlan_change(deviceip, interface_type,
-                            interfaces, int(data_vlan_id),
-                            int(voice_vlan_id))
+        action = vlan_change(change_detail)
         messages.add_message(
             request, messages.SUCCESS, f'{action}')
         return HttpResponseRedirect(reverse(f'main_app:devicedetail',
@@ -273,6 +304,13 @@ def port_vlan_assignment(request, deviceip, deviceid):
 
 @login_required
 def sync_device_vlans(request, deviceip, deviceid):
+    """This function will call a population function get_device_vlans in
+    pullconfig_script module under script directory, this function will then
+    call the discover vlan method in the OS class under api_scripts module
+    which will discover the vlans and return a dictionary which will be used
+    by  get_device_vlans function to perform a db population using the
+    DataBaseActions class under pullconfig_script module.
+    """
     success_url = f'devices/{deviceid}'
     try:
 
@@ -314,6 +352,10 @@ def sync_device_vlans(request, deviceip, deviceid):
 
 @login_required
 def device_search_function(request):
+    """
+    This FBV will perform a query on the db and render results on the
+    results.html template.
+    """
     name = request.GET.get('item')
     # return HttpResponse(f'<h2>{name}</h2>')
     try:

@@ -23,11 +23,12 @@ class CiscoIOSXE:
     restconf_headers = {"Accept": "application/yang-data+json"}
 
     restconf_base = "https://{ip}:{port}/restconf/data"
+    restconf_operations_base = "https://{ip}:{port}/restconf/operations"
     #disable self-signed certificates warning for demo
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
-    def __init__(self, ip, username="cisco", password="cisco"):
+    def __init__(self, ip, username="developer", password="C1sco12345"):
         """initialization method"""
 
         self.ip = ip
@@ -135,8 +136,9 @@ class CiscoIOSXE:
                                     data_vlan_id, voice_vlan_id):
         restconf_headers = {"Content-Type": "application/yang-data+json"}
         platform_info_url = self.restconf_base + "/Cisco-IOS-XE-native:native/interface/{interface_type}/"
+        save_config_url = self.restconf_operations_base + "/cisco-ia:save-config"
         url = platform_info_url.format(ip=self.ip, port='443', interface_type=interface_type)
-
+        url_save = save_config_url.format(ip=self.ip, port='443')
         data ={
             f"Cisco-IOS-XE-native:{interface_type}":
                 {
@@ -171,7 +173,11 @@ class CiscoIOSXE:
                 elif r.status_code == 202:
                     return ("Accepted")
                 elif r.status_code == 204:
-                    return ("Request processed Successfully")
+                    r = self.requests.post(url_save,
+                                    headers = restconf_headers,
+                                    auth=(self.username, self.password),
+                                    verify=False)
+                    return ("Port VLAN assignment change completed successfully")
                 else:
                     #process JSON data into Python Dictionary and use
                     return ("Request Status Code: {}".format(r.status_code))

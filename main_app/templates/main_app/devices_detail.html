@@ -147,7 +147,6 @@
                   {%for vlan in device_detail.vlans.all%}
                     <option value={{vlan.vlan_id}}>{{vlan.vlan_name}} - ID {{vlan.vlan_id}}</option>
                   {%endfor%}
-                  <option value="Ethernet">Ethernet</option>
                 </select>
                 <!-- select for voice vlan -->
                 <select class="mycustom-select" name="voice_vlan_id" form="vlanchangeform" style="width: 70%; marging-bottom: 10px;">
@@ -155,7 +154,6 @@
                   {%for vlan in device_detail.vlans.all%}
                     <option value={{vlan.vlan_id}}>{{vlan.vlan_name}} - ID {{vlan.vlan_id}}</option>
                   {%endfor%}
-                  <option value="Ethernet">Ethernet</option>
                 </select>
                 <!-- <input class="textinputclass" type="text" name="interface" form="vlanchangeform" value="" placeholder="Enter Interfaces"> -->
                 <!-- Modal footer -->
