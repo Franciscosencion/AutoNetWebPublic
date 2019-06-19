@@ -34,7 +34,8 @@ class DeviceForm(forms.ModelForm):
     class Meta():
         model = Devices
         fields = ('device_name', 'device_ip', 'vendor', 'device_type',
-                    'operating_system', 'site')
+                    'operating_system', 'device_username',
+                    'device_password','site')
         widgets = {
                     'device_name': forms.TextInput(attrs={
                     'class':'textinputclass', 'placeholder': 'Device Name'}),
@@ -46,6 +47,11 @@ class DeviceForm(forms.ModelForm):
                     'class':'mycustom-select', 'id':'device-type-select'}),
                     'operating_system':forms.Select(attrs={
                     'class':'mycustom-select', 'id':'os-select'}),
+                    'device_username':forms.TextInput(attrs={
+                    'class':'textinputclass', 'placeholder': 'username'}),
+                    'device_password':forms.TextInput(attrs={
+                    'class':'textinputclass', 'type':'password',
+                    'placeholder': 'password'}),
                     'site':forms.Select(attrs={
                     'class':'mycustom-select', 'id':'site-select'}),
         }
