@@ -21,31 +21,42 @@
     <div class="mb-4">
 
 
-      <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #e6e6e6; height: 40px; font-size: 14px; font-family: 'Source Sans Pro' !important;">
-        <a class="navbar-brand" href="{% url 'main_app:home' %}">AutoNet</a>
+      <nav class="navbar navbar-expand-lg navbar-dark fixed-top " style="background-color: #507682; font-size: 14px; font-family: 'Source Sans Pro' !important;">
+        <div class="navbar-brand">
+
+        </div>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-              <a class="nav-link" href="{% url 'main_app:home' %}"><div class="icon">
-                <i ><img src="{% static 'img/home.svg' %}" alt="Home" style="width: 20px; height: 20px; "></i> 
-              </div>  <span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="{% url 'main_app:home' %}">
+                <div class="nav-icon">
+                  <i id="home-icon"><img src="{% static 'img/round-home.svg' %}" alt="Home" ></i>
+                </div>
+              </a>
             </li>
             <li class="nav-item active">
-              <a class="nav-link" href="{% url 'main_app:viewsites' %}"><strong>Sites</strong></a>
-            </li>
-            <li class="nav-item active">
-              <a class="nav-link" href="{% url 'main_app:viewdevices' %}">
-                <div class="icon">
-                  <img src="{% static 'img/device_inventory.png' %}" alt="Devices" style="width: 20px; height: 20px; color: white;">
+              <a class="nav-link" href="{% url 'main_app:viewsites' %}">
+                <div class="nav-icon">
+                  <i id="sites-icon"><img src="{% static 'img/round-business.svg' %}" alt="Sites"></i>
                 </div>  <span class="sr-only">(current)</span></a>
               </a>
             </li>
             <li class="nav-item active">
-              <a class="nav-link" href="{% url 'admin:index' %}"><strong>Admin</strong></a>
+              <a class="nav-link" href="{% url 'main_app:viewdevices' %}">
+                <div class="nav-icon">
+                  <i id="devices-icon"><img src="{% static 'img/round-devices.svg' %}" alt="Devices" ></i>
+                </div></a>
+              </a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="{% url 'admin:index' %}">
+                <div class="nav-icon">
+                  <i id="admin-icon" ><img src="{% static 'img/round-settings.svg' %}" alt="Admin"></i>
+                </div></a>
+              </a>
             </li>
           </ul>
           <div class="">
@@ -62,7 +73,7 @@
           </div>
           <form class="form-inline my-2 my-lg-0" action="{% url 'main_app:search'%}" method="get">
               <input class="form-control ml-2 mr-sm-2 " type="search"  name="item" style="height: 30px;"placeholder="Hostname or IP" aria-label="Search">
-              <button class="btn btn-outline-success my-2 my-sm-0" type="submit" style="height: 30px; padding: 5px 10px; line-height: 0;">Search</button>
+              <button id="btn-search" class="btn_class" type="submit" >Search</button>
         </form>
 
           <!-- <form class="form-inline my-2 my-lg-0">
@@ -93,8 +104,6 @@
           <p>Created by Francisco</p>
         </div>
       </footer> -->
-
-
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>

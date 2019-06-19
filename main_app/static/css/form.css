@@ -19,6 +19,24 @@
   border-radius: 4px;
 }
 
+#btn-search {
+    color: #fff;
+    background-color: transparent;
+    background-image: none;
+    border: 1px solid #fff;
+    height: 30px;
+    padding: 5px 10px;
+    line-height: 0;
+}
+
+#btn-search:hover {
+  color: #fff;
+  background-color: #237f19;
+  border-color: #27911b;
+  box-shadow: 0 !important;
+
+}
+
 #btn-cancel {
   background-color: #1979ff;
   color: white;
@@ -285,4 +303,26 @@
 
 .myfade {
     transition: opacity .15s linear;
+}
+/* navbar properties */
+
+/* .custom_navbar {
+
+}
+.custom_navbar div ul li a {
+  color: #fff !important;
+  text-decoration: none;
+} */
+/* navegation bar icon properties */
+.navbar-brand {
+  color: #fff;
+  text-decoration: none;
+}
+.navbar-brand:hover {
+  color: #fff;
+}
+.nav-icon {
+  width: 18px;
+  height: 18px;
+
 }
