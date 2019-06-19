@@ -24,7 +24,7 @@ from script.api_scripts import AuthenticationError
 
 class HomeTemplateView(LoginRequiredMixin, TemplateView):
     template_name = 'main_app/home.html'
-
+    context_object_name = 'home_page'
 
 # Sites CBVs
 class SitesListView(LoginRequiredMixin, ListView):

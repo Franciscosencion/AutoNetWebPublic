@@ -3,9 +3,19 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    {%block title %}
-    {%endblock title %}
-
+    {% if home_page %}
+    <title>AutoNet - Home</title>
+    {% elif sites %}
+    <title>AutoNet - Sites</title>
+    {%elif devices%}
+    <title>AutoNet - Device Inventory</title>
+    {%elif device_detail%}
+    <title>Device - {{device_detail.device_name}}</title>
+    {%elif deviceconfig%}
+    <title>{{deviceconfig.device_id.device_name}} - Config</title>
+    {%else%}
+    <title>AutoNet</title>
+    {%endif%}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     {% load staticfiles %}
@@ -21,7 +31,7 @@
     <div class="mb-4">
 
 
-      <nav class="navbar navbar-expand-lg navbar-dark fixed-top " style="background-color: #507682; font-size: 14px; font-family: 'Source Sans Pro' !important;">
+      <nav class="navbar navbar-expand-lg navbar-dark fixed-top custom_navbar" style="background-color: #3d3d3d; font-size: 14px; font-family: 'Source Sans Pro' !important;">
         <div class="navbar-brand">
 
         </div>
@@ -33,28 +43,28 @@
             <li class="nav-item active">
               <a class="nav-link" href="{% url 'main_app:home' %}">
                 <div class="nav-icon">
-                  <i id="home-icon"><img src="{% static 'img/round-home.svg' %}" alt="Home" ></i>
+                  <i id="home-icon" class="material-icons">home</i>
                 </div>
               </a>
             </li>
             <li class="nav-item active">
               <a class="nav-link" href="{% url 'main_app:viewsites' %}">
                 <div class="nav-icon">
-                  <i id="sites-icon"><img src="{% static 'img/round-business.svg' %}" alt="Sites"></i>
+                  <i id="sites-icon" class="material-icons">business</i>
                 </div>  <span class="sr-only">(current)</span></a>
               </a>
             </li>
             <li class="nav-item active">
               <a class="nav-link" href="{% url 'main_app:viewdevices' %}">
                 <div class="nav-icon">
-                  <i id="devices-icon"><img src="{% static 'img/round-devices.svg' %}" alt="Devices" ></i>
+                  <i id="devices-icon" class="material-icons">storage</i>
                 </div></a>
               </a>
             </li>
             <li class="nav-item active">
               <a class="nav-link" href="{% url 'admin:index' %}">
                 <div class="nav-icon">
-                  <i id="admin-icon" ><img src="{% static 'img/round-settings.svg' %}" alt="Admin"></i>
+                  <i id="admin-icon" class="material-icons">settings</i>
                 </div></a>
               </a>
             </li>

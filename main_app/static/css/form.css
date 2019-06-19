@@ -306,13 +306,10 @@
 }
 /* navbar properties */
 
-/* .custom_navbar {
-
+.custom_navbar {
+  padding: 0 10px;
 }
-.custom_navbar div ul li a {
-  color: #fff !important;
-  text-decoration: none;
-} */
+
 /* navegation bar icon properties */
 .navbar-brand {
   color: #fff;
@@ -321,8 +318,12 @@
 .navbar-brand:hover {
   color: #fff;
 }
-.nav-icon {
-  width: 18px;
-  height: 18px;
 
+.nav-icon .material-icons {
+  height: 0;
+  color: #fff;
+}
+
+.nav-icon .material-icons:hover {
+  color: #d6d8d8;
 }
