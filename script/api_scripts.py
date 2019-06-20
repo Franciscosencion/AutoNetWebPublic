@@ -28,12 +28,15 @@ class CiscoIOSXE:
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
-    def __init__(self, ip, username="developer", password="C1sco12345"):
-        """initialization method"""
+    def __init__(self, session_detail):
+        """__init__ method requires a dictionary object containing the
+        device ip and credentials which will then be used by all class methods
+        to perform the API calls.
+        """
 
-        self.ip = ip
-        self.username = username
-        self.password = password
+        self.ip = session_detail["ip"]
+        self.username = session_detail["username"]
+        self.password = session_detail["password"]
 
     def get_platform_detail(self):
         """This method will pull both the platform model as well as
@@ -217,10 +220,10 @@ class CiscoIOSXE:
 
 class CiscoIOS:
     import re
-    def __init__(self, ip, task=None, username='cisco', password='cisco'):
-        self.ip = ip
-        self.username = username
-        self.password = password
+    def __init__(self, session_detail, task=None):
+        self.ip = session_detail["ip"]
+        self.username = session_detail["username"]
+        self.password = session_detail["password"]
 
     def main_session(self):
         """
@@ -243,6 +246,9 @@ class CiscoIOS:
             session = self.main_session()
             with session:
                 session.enable()
+                version_output = session.send_command('show running-config')
+                pattern = self.re.compile(r'[vV]ersion.*[\.0-9]+')
+                os_version = pattern.search(version_output).group(0)
                 output = session.send_command('show inventory')
                 pattern = self.re.compile(r'[PIDpid]+:\s+([A-Za-z0-9]+).*[SsNn:]+\s+([0-9A-Za-z]+).*')
                 match = pattern.finditer(output)
@@ -252,7 +258,8 @@ class CiscoIOS:
                     if model and serial:
                         break
 
-            return {'model': model, 'serial_number': serial}
+            return {'model': model, 'serial_number': serial,
+                    'os_version': os_version}
         except AuthenticationException as error:
             #this will raise authentication error when wrong credentials are
             #provided
@@ -290,3 +297,6 @@ class CiscoIOS:
             #this will raise an  SSH service exception when unable to establish
             #an SSH session
             raise error
+
+    def get_interfaces(self):
+        return {'GigabitEthernet':'Test'}

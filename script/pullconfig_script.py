@@ -105,17 +105,21 @@ def sync_platform(device_ip, device_id):
 
     try:
         device_object = Devices.objects.get(id=device_id)
+        session_detail = {'username':device_object.device_username,
+                        'password':device_object.device_password,
+                        'ip': device_ip}
+
         #find serial number & model
         if device_object.vendor == "C":
             if device_object.operating_system == '1':
                 #operating system 1 is Cisco IOS
                 from .api_scripts import (CiscoIOS)
-                platform_detail =CiscoIOS(device_ip)
+                platform_detail =CiscoIOS(session_detail)
                 pass
             elif device_object.operating_system == '2':
                 #Cisco IOS-XE
                 from .api_scripts import (CiscoIOSXE)
-                platform_detail = CiscoIOSXE(device_ip)
+                platform_detail = CiscoIOSXE(session_detail)
             elif device_object.operating_system == '3':
                 # Cisco IOS-XR
                 pass
@@ -181,17 +185,20 @@ def sync_device_configuration(device_ip, device_id, user):
 
     try:
         device_object = Devices.objects.get(id=device_id)
+        session_detail = {'username':device_object.device_username,
+                        'password':device_object.device_password,
+                        'ip': device_ip}
         #find serial number & model
         if device_object.vendor == "C":
             if device_object.operating_system == '1':
                 #operating system 1 is Cisco IOS
                 from .api_scripts import (CiscoIOS)
-                platform_detail =CiscoIOS(device_ip)
+                platform_detail =CiscoIOS(session_detail)
                 pass
             elif device_object.operating_system == '2':
                 #Cisco IOS-XE
                 from .api_scripts import (CiscoIOSXE)
-                platform_detail = CiscoIOSXE(device_ip)
+                platform_detail = CiscoIOSXE(session_detail)
             elif device_object.operating_system == '3':
                 # Cisco IOS-XR
                 pass
@@ -222,17 +229,20 @@ def get_device_vlans(device_ip, device_id):
 
     try:
         device_object = Devices.objects.get(id=device_id)
+        session_detail = {'username':device_object.device_username,
+                        'password':device_object.device_password,
+                        'ip': device_ip}
         #find serial number & model
         if device_object.vendor == "C":
             if device_object.operating_system == '1':
                 #operating system 1 is Cisco IOS
                 from .api_scripts import (CiscoIOS)
-                session = CiscoIOS(device_ip)
+                session = CiscoIOS(session_detail)
                 pass
             elif device_object.operating_system == '2':
                 #Cisco IOS-XE
                 from .api_scripts import (CiscoIOSXE)
-                session = CiscoIOSXE(device_ip)
+                session = CiscoIOSXE(session_detail)
             elif device_object.operating_system == '3':
                 # Cisco IOS-XR
                 pass
@@ -268,17 +278,20 @@ def vlan_change(change_detail):
 
     try:
         device_object = Devices.objects.get(id=change_detail['device_id'])
+        session_detail = {'username':device_object.device_username,
+                        'password':device_object.device_password,
+                        'ip': change_detail["ip"]}
         #find serial number & model
         if device_object.vendor == "C":
             if device_object.operating_system == '1':
                 #operating system 1 is Cisco IOS
                 from .api_scripts import (CiscoIOS)
-                session = CiscoIOS(change_detail['ip'])
+                session = CiscoIOS(session_detail)
                 pass
             elif device_object.operating_system == '2':
                 #Cisco IOS-XE
                 from .api_scripts import (CiscoIOSXE)
-                session = CiscoIOSXE(change_detail['ip'])
+                session = CiscoIOSXE(session_detail)
             elif device_object.operating_system == '3':
                 # Cisco IOS-XR
                 pass

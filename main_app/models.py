@@ -48,7 +48,7 @@ class Devices(models.Model):
     software_version = models.CharField(max_length=300, null=True, blank=True)
     # device credentials
     device_username = models.CharField(max_length=100, null=False, default="user")
-    device_password = models.CharField(max_length=250, null=False, default="no_password")
+    device_password = models.CharField(max_length=250, null=False)
     site = models.ForeignKey(Sites,
                             on_delete=models.CASCADE,
                             related_name = 'devices',
