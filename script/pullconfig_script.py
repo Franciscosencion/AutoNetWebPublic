@@ -131,50 +131,9 @@ def sync_platform(device_ip, device_id):
         device_interfaces = platform_detail.get_interfaces()
         #instantiate the database action class
         action = DataBaseActions(device_id)
-        #formatting interfaces into multiline string
-        #interface_list = list()
-        #for interface_type, interfaces in device_interfaces.items():
-        #    for interface in interfaces:
-        #        interface_list.append(interface)
-        #all_interfaces = "\n".join(interface_list) # interfaces formmated
-
-        #try:
-            #if interface object exist will update it in the db
-            #object = DeviceInterfaces.objects.get(device_id=device_id)
         action.sync_interfaces(device_interfaces)
         action.sync_platform_attributes(device_details)
-        #except ObjectDoesNotExist:
-            #will create object
-        #    action.create_interfaces(all_interfaces)
-        #    action.sync_platform_attributes(device_details)
-        #
-        #
-        #
-        # # update record if configuration record exist
-        # DeviceDetail.objects.filter(device_id_id=device_id).update(
-        #                         device_config=device_config[
-        #                         'running_config'],
-        #                         device_script="NA",
-        #                         modified_by = user,
-        #                         last_modify = timezone.now())
-        #
-        # Devices.objects.filter(id=device_id).update(
-        #                         device_model=device_detail["model"],
-        #                         device_sn=device_detail["serial_number"])
-        # #last_modify=datetime.datetime.now()
-    # except ObjectDoesNotExist:
-    #     # New object will be created if ObjectDoesNotExist exception triggers
-    #     sync_conf = DeviceDetail.objects.get_or_create(
-    #                             device_config=device_config[
-    #                             'running_config'],
-    #                             device_script="NA",
-    #                             created_by = user,
-    #                             modified_by = user,
-    #                             device_id_id=device_id)[0]
-    #     sync_conf.save()
-    #     Devices.objects.filter(id=device_id).update(
-    #                             device_model=device_detail["model"],
-    #                             device_sn=device_detail["serial_number"])
+
         return HttpResponse(status=201)
     except UnboundLocalError as error:
         raise error
