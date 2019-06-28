@@ -1,3 +1,7 @@
+:root {
+  font-size: 1em;
+}
+
 .textinputclass {
   width: 100%;
   padding: 12px 20px;
@@ -307,7 +311,17 @@
 /* navbar properties */
 
 .custom_navbar {
-  padding: 0 10px;
+  position: fixed;
+  top: 0;
+  left:0;
+  height: 60px;
+  width: 100%;
+  background-color: #222;
+  display: flex;
+  flex-wrap: wrap;
+  z-index: 1000;
+  font-family: 'Source Sans Pro' !important;"
+  font-size: 14px;
 }
 
 /* navegation bar icon properties */
@@ -326,4 +340,27 @@
 
 .nav-icon .material-icons:hover {
   color: #d6d8d8;
+}
+
+.home_banner {
+  padding: 1em;
+  width: 50%;
+  margin: auto;
+  background-color: #FFF;
+  border-radius: 0.5em;
+  border: 1px solid #999;
+}
+
+.home_banner > h2 {
+  margin-top: 0;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-align: center;
+  color: #ff9900;
+}
+
+.home_banner_body {
+  font-size: 1rem;
+  text-align: justify;
 }
