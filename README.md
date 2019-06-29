@@ -21,23 +21,23 @@ If you have any questions, feel free to contact at the emails below or at my **L
 - **francisco.sencion@yahoo.com**
 
 
-##Setup Instructions
+#Setup Instructions
 
 1. Clone repository:
-   git clone "repository"
+      git clone "repository"
    
 2. Enable virtual environment and installing dependencies using pipenv python module. You can install pipenv with **pip install pipenv**:
-    pipenv install -r requirements.txt
+      pipenv install -r requirements.txt
 
 3. Make Django migrations to setup the models:
-    django manage.py makemigrations
-    django manage.py migrate
+      django manage.py makemigrations
+      django manage.py migrate
     
 4. Create Django Super User:
-    python manage.py createsuperuser
+      python manage.py createsuperuser
     
 5. Run Server:
-    django manage.py runserver
+      django manage.py runserver
     
 6. Access application in your browser at **localhost:8000** and log in using the super user you created in step 4.
 
