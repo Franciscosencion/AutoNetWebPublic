@@ -21,7 +21,7 @@ If you have any questions, feel free to contact at the emails below or at my **L
 - **francisco.sencion@yahoo.com**
 
 
-***Setup Instructions
+## Setup Instructions
 
 1. Clone repository:
       ```
