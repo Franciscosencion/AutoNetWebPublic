@@ -15,7 +15,7 @@ I will create a proper documentation that includes the functionalities already a
 For portability sake, I decided to use **SQLITE** as the database engine for this project, this is subject to modification in the future if I am in the need of a more scalable **DBMS** such **PostgreSQL** or **MySQL**.
 
 
-If you have any questions, feel free to contact at the emails below or at my **LinkedIn** profile **Francisco Sencion**:
+If you have any questions, feel free to contact me at the emails below or at my **LinkedIn** profile **Francisco Sencion**:
 
 - **francisco.sencion@gmail.com**
 - **francisco.sencion@yahoo.com**
@@ -27,7 +27,7 @@ If you have any questions, feel free to contact at the emails below or at my **L
       ```
       git clone "repository"
       ```
-2. Enable virtual environment and installing dependencies using pipenv python module. You can install pipenv with **pip install pipenv**:
+2. Enabling virtual environment and installing dependencies using pipenv python module. You can install pipenv with **pip install pipenv**:
       ```
       pipenv install -r requirements.txt
       ```
