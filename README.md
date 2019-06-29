@@ -16,7 +16,7 @@ For portability sake, I decided to use **SQLITE** as the database engine for thi
 
 ***Important***
 
-Django Restful Framework API has been integrated to this project to perform task such registering devices, creating branches through API calls. REST framework is a collaboratively funded project. If you use REST framework commercially DRF developers strongly encourage you to invest in its continued development by [signing up for a paid plan](https://fund.django-rest-framework.org/topics/funding/).
+Django Restful Framework API has been integrated to this project to perform task such registering devices, creating branches through API calls. REST framework is a collaboratively funded project. If you use REST framework commercially DRF developers strongly encourage you to invest in its continued development by signing up for a paid plan. More details can be found in [REST framework github repository](https://github.com/encode/django-rest-framework).
 
 
 If you have any questions, feel free to contact me at the emails below or at my **LinkedIn** profile **Francisco Sencion**:
