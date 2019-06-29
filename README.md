@@ -1,12 +1,14 @@
 # AutoNetWeb
 
-This is an open source work in progress project mainly focused on Network configuration management and automation. Project is being developed with **Django** and **Python** on the backend, and **HTML**, **CSS**, **JavaScript** on the front-end.
+This is a work in progress open source project licensed under **MIT**. with main focus on Network configuration management and automation. Project is being developed with **Django** and **Python** on the backend, and **HTML**, **CSS**, **JavaScript** on the front-end.
 
 I will create a proper documentation that includes the functionalities already available, meanwhile, below are a brief description of some of the functionalities available:
 
 1. Create Branches.
 2. Register Network devices and associate them to a branch.
 3. Support for model driven APIs such **RESTCONF**, and legacy API such **SSH** using **NetMiko**.
+      - First thanks to Kirk Byers for making this awesome API possible.
+      - Netmiko is licensed under the MIT and more details can be found under [Netmiko Github Repository](https://github.com/ktbyers/netmiko).
 4. On routers only **retrieving configuration** and **interfaces** are available on **Cisco Devices** **only** at this moment.
 5. On Switches, only **retrieving configuration**, **interfaces**, **changing port VLAN assignment**, **Synchronizing VLANs** are available using **RESTCONF** on **Cisco Devices only** at this moment.
 
